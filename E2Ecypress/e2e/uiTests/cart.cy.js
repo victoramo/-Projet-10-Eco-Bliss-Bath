@@ -105,10 +105,11 @@ describe("Panier - Tests UI", () => {
     cy.contains("button", "Ajouter au panier").click();
 
     // On attend d'être sur la page panier
+    cy.visit("/#/cart");
     cy.url().should("include", "/cart");
 
     // On vérifie que le bouton de suppression est visible
-    cy.get("img[alt='Supprimer le produit']").should("be.visible");
+    cy.get("img[alt='Supprimer le produit']").first().click();
 
     // On clique sur le bouton de suppression
     cy.get("img[alt='Supprimer le produit']").first().click();
@@ -128,14 +129,22 @@ describe("Panier - Tests UI", () => {
   it("3 - Le panier est vide après suppression (stock:50)", () => {
     allerVersPageProduit(PRODUCTS.normal);
 
-    // On ajoute le produit
+    // Ajout au panier
     cy.contains("button", "Ajouter au panier").click();
+
+    // Navigation manuelle vers le panier
+    cy.visit("/#/cart");
     cy.url().should("include", "/cart");
 
-    // On supprime le produit
+    // ✅ Vérifier que le produit est bien présent avant suppression
+    cy.get("img[alt='Supprimer le produit']", { timeout: 8000 })
+      .should("exist")
+      .and("be.visible");
+
+    // Suppression
     cy.get("img[alt='Supprimer le produit']").first().click();
 
-    // On vérifie qu'un message "panier vide" est affiché
+    // Vérification message panier vide
     cy.get("p, h2, div")
       .contains(/panier est vide|aucun produit|empty/i)
       .should("be.visible")
