@@ -1,0 +1,200 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 6,
+    "passes": 6,
+    "pending": 0,
+    "failures": 0,
+    "start": "2026-03-17T17:03:18.962Z",
+    "end": "2026-03-17T17:03:21.953Z",
+    "duration": 2991,
+    "testsRegistered": 6,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "2cb55233-9b1b-4e65-aad5-3e761fb90038",
+      "title": "",
+      "fullFile": "E2Ecypress\\e2e\\apiTests\\api-auth.cy.js",
+      "file": "E2Ecypress\\e2e\\apiTests\\api-auth.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "35e6d5e0-42a5-4031-8b62-b38620440a74",
+          "title": "API - Authentification",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "1 - API Register - Status 200/201",
+              "fullTitle": "API - Authentification 1 - API Register - Status 200/201",
+              "timedOut": null,
+              "duration": 1255,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const timestamp = Date.now();\n(0, _apiAuth.register)(`demo_${timestamp}`, `user_${timestamp}`, `demo_${timestamp}@example.com`, \"testtest\", false).then(response => {\n  cy.log(`📡 Status : ${response.status}`);\n  expect(response.status).to.be.oneOf([200, 201]);\n});",
+              "err": {},
+              "uuid": "fa3c9a6a-78dd-47f4-8f95-424979667ea4",
+              "parentUUID": "35e6d5e0-42a5-4031-8b62-b38620440a74",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "2 - API Register - Email existant - Status 400/422",
+              "fullTitle": "API - Authentification 2 - API Register - Email existant - Status 400/422",
+              "timedOut": null,
+              "duration": 160,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiAuth.register)(\"ramo\", \"victor\", \"ramoshippuden@gmail.com\", \"testtest\", false).then(response => {\n  cy.log(`📡 Status : ${response.status}`);\n  expect(response.status).to.be.oneOf([400, 422]);\n});",
+              "err": {},
+              "uuid": "461e6759-f35b-4929-a338-75e885998291",
+              "parentUUID": "35e6d5e0-42a5-4031-8b62-b38620440a74",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "3 - API Login - Status 200 + token",
+              "fullTitle": "API - Authentification 3 - API Login - Status 200 + token",
+              "timedOut": null,
+              "duration": 488,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiAuth.login)(\"ramoshippuden@gmail.com\", \"testtest\", false).then(response => {\n  cy.log(`📡 Status : ${response.status}`);\n  expect(response.status).to.eq(200);\n  expect(response.body.token).to.exist;\n  cy.log(`🔑 Token : ${response.body.token}`);\n});",
+              "err": {},
+              "uuid": "cbf415c3-823c-423f-9f60-cfb1bfce324b",
+              "parentUUID": "35e6d5e0-42a5-4031-8b62-b38620440a74",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "4 - API Login - Email invalide - Status 401",
+              "fullTitle": "API - Authentification 4 - API Login - Email invalide - Status 401",
+              "timedOut": null,
+              "duration": 114,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiAuth.login)(\"emailinvalide\", \"testtest\", false).then(response => {\n  cy.log(`📡 Status : ${response.status}`);\n  expect(response.status).to.eq(401);\n});",
+              "err": {},
+              "uuid": "726fb767-03f6-4a01-91a8-3cf5bc5d8a0e",
+              "parentUUID": "35e6d5e0-42a5-4031-8b62-b38620440a74",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "5 - API Login - Email inexistant - Status 401",
+              "fullTitle": "API - Authentification 5 - API Login - Email inexistant - Status 401",
+              "timedOut": null,
+              "duration": 135,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const fakeEmail = _faker.faker.internet.email();\nconst fakePassword = _faker.faker.internet.password();\n(0, _apiAuth.login)(fakeEmail, fakePassword, false).then(response => {\n  cy.log(`📡 Status : ${response.status}`);\n  expect(response.status).to.eq(401);\n  cy.writeFile(\"E2Ecypress/logs/auth_failure.json\", {\n    username: fakeEmail,\n    password: fakePassword,\n    status: response.status,\n    timestamp: new Date().toISOString()\n  });\n});",
+              "err": {},
+              "uuid": "718a26cd-5cdc-496c-af5d-2f0f94450d49",
+              "parentUUID": "35e6d5e0-42a5-4031-8b62-b38620440a74",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "6 - API Login - Mauvais mot de passe - Status 401",
+              "fullTitle": "API - Authentification 6 - API Login - Mauvais mot de passe - Status 401",
+              "timedOut": null,
+              "duration": 715,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiAuth.login)(\"ramoshippuden@gmail.com\", \"mauvaismdp\", false).then(response => {\n  cy.log(`📡 Status : ${response.status}`);\n  expect(response.status).to.eq(401);\n});",
+              "err": {},
+              "uuid": "c006ff1a-bab1-4c06-b3bd-a62656ca08f6",
+              "parentUUID": "35e6d5e0-42a5-4031-8b62-b38620440a74",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "fa3c9a6a-78dd-47f4-8f95-424979667ea4",
+            "461e6759-f35b-4929-a338-75e885998291",
+            "cbf415c3-823c-423f-9f60-cfb1bfce324b",
+            "726fb767-03f6-4a01-91a8-3cf5bc5d8a0e",
+            "718a26cd-5cdc-496c-af5d-2f0f94450d49",
+            "c006ff1a-bab1-4c06-b3bd-a62656ca08f6"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 2867,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "E2Ecypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true
+      },
+      "version": "6.3.2"
+    }
+  }
+}

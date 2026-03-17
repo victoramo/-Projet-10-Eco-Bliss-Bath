@@ -1,0 +1,263 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 8,
+    "passes": 2,
+    "pending": 0,
+    "failures": 6,
+    "start": "2026-03-17T20:52:18.156Z",
+    "end": "2026-03-17T20:54:25.469Z",
+    "duration": 127313,
+    "testsRegistered": 8,
+    "passPercent": 25,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "e6a20f46-7e96-4a4b-ae7a-62e604cb7675",
+      "title": "",
+      "fullFile": "E2Ecypress\\e2e\\uiTests\\cart.cy.js",
+      "file": "E2Ecypress\\e2e\\uiTests\\cart.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "b61fe9bc-f957-4156-b391-6eb1467fb14f",
+          "title": "Panier - Tests UI",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "1 - Ajouter un produit au panier avec quantité 3 (stock:39)",
+              "fullTitle": "Panier - Tests UI 1 - Ajouter un produit au panier avec quantité 3 (stock:39)",
+              "timedOut": null,
+              "duration": 6573,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "allerVersPageProduit(PRODUCTS.normal);\ncy.get(\"input[type='number']\").clear().type(\"3\").should(\"have.value\", \"3\");\ncy.intercept(\"POST\", \"**/order_lines\").as(\"addToCart\");\ncy.contains(\"button\", \"Ajouter au panier\").click();\ncy.wait(\"@addToCart\", {\n  timeout: 5000\n}).then(interception => {\n  cy.log(`📡 Status ajout panier : ${interception.response.statusCode}`);\n  expect(interception.response.statusCode).to.be.oneOf([200, 201]);\n});\ncy.url({\n  timeout: 6000\n}).should(\"include\", \"/cart\");\ncy.log(`✅ TEST 1 — ${PRODUCTS.normal.name} ajouté (qty:3)`);",
+              "err": {
+                "message": "CypressError: Timed out retrying after 5000ms: `cy.wait()` timed out waiting `5000ms` for the 1st request to the route: `addToCart`. No request ever occurred.\n\nhttps://on.cypress.io/wait",
+                "estack": "CypressError: Timed out retrying after 5000ms: `cy.wait()` timed out waiting `5000ms` for the 1st request to the route: `addToCart`. No request ever occurred.\n\nhttps://on.cypress.io/wait\n    at cypressErr (http://localhost:4200/__cypress/runner/cypress_runner.js:78375:18)\n    at Object.errByPath (http://localhost:4200/__cypress/runner/cypress_runner.js:78443:10)\n    at checkForXhr (http://localhost:4200/__cypress/runner/cypress_runner.js:138930:84)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:138955:28)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise.attempt.Promise.try (http://localhost:4200/__cypress/runner/cypress_runner.js:4285:29)\n    at whenStable (http://localhost:4200/__cypress/runner/cypress_runner.js:152022:68)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:151963:14)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise._settlePromiseFromHandler (http://localhost:4200/__cypress/runner/cypress_runner.js:1489:31)\n    at Promise._settlePromise (http://localhost:4200/__cypress/runner/cypress_runner.js:1546:18)\n    at Promise._settlePromise0 (http://localhost:4200/__cypress/runner/cypress_runner.js:1591:10)\n    at Promise._settlePromises (http://localhost:4200/__cypress/runner/cypress_runner.js:1671:18)\n    at Promise._fulfill (http://localhost:4200/__cypress/runner/cypress_runner.js:1615:18)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:5420:46)",
+                "diff": null
+              },
+              "uuid": "6e58cec5-bb9b-4cac-b68e-2c2bd8a59a0e",
+              "parentUUID": "b61fe9bc-f957-4156-b391-6eb1467fb14f",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "2 - Ajouter 2 produits différents puis vider le panier",
+              "fullTitle": "Panier - Tests UI 2 - Ajouter 2 produits différents puis vider le panier",
+              "timedOut": null,
+              "duration": 11984,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "// ── Connexion compte isolé test2 ──────────────────────────\ncy.intercept(\"POST\", \"**/login\").as(\"loginTest2\");\ncy.visit(\"/#/login\");\ncy.get(\"#username\").type(\"test2@test.fr\");\ncy.get(\"#password\").type(\"testtest\");\ncy.contains(\"span\", \"Se connecter\").click();\ncy.wait(\"@loginTest2\", {\n  timeout: 5000\n}).then(interception => {\n  cy.log(`📡 Status login : ${interception.response.statusCode}`);\n  expect(interception.response.statusCode).to.eq(200);\n});\ncy.url({\n  timeout: 6000\n}).should(\"not.include\", \"/login\");\ncy.log(\"✅ Connecté avec test2@test.fr\");\n// ── ÉTAPE 1 : Navbar Produits → consulter 1er produit ─────\ncy.intercept(\"GET\", \"**/products\").as(\"getProducts1\");\ncy.get(\"a[data-cy='nav-link-products']\").click();\ncy.wait(\"@getProducts1\", {\n  timeout: 5000\n}).then(interception => {\n  cy.log(`📡 Status produits : ${interception.response.statusCode}`);\n  expect(interception.response.statusCode).to.eq(200);\n});\ncy.get(\"article.mini-product\", {\n  timeout: 6000\n}).should(\"have.length.above\", 0).first().find(\"button[data-cy='product-link']\").click();\ncy.get(\"#product-content\", {\n  timeout: 6000\n}).should(\"be.visible\");\ncy.get(\".stock\").should(\"be.visible\");\ncy.intercept(\"PUT\", \"**/orders/add\").as(\"addCart1\");\ncy.get(\"button[data-cy='detail-product-add']\").click();\ncy.wait(\"@addCart1\", {\n  timeout: 5000\n}).then(interception => {\n  cy.log(`📡 Status ajout produit 1 : ${interception.response.statusCode}`);\n  expect(interception.response.statusCode).to.eq(200);\n});\ncy.log(\"✅ ÉTAPE 1 — Produit 1 ajouté\");\n// ── ÉTAPE 2 : Navbar Produits → consulter produit différent\ncy.intercept(\"GET\", \"**/products\").as(\"getProducts2\");\ncy.get(\"a[data-cy='nav-link-products']\").click();\ncy.wait(\"@getProducts2\", {\n  timeout: 5000\n}).then(interception => {\n  cy.log(`📡 Status produits : ${interception.response.statusCode}`);\n  expect(interception.response.statusCode).to.eq(200);\n});\ncy.get(\"article.mini-product\", {\n  timeout: 6000\n}).should(\"have.length.above\", 0).eq(2).find(\"button[data-cy='product-link']\").click();\ncy.get(\"#product-content\", {\n  timeout: 6000\n}).should(\"be.visible\");\ncy.get(\".stock\").should(\"be.visible\");\ncy.intercept(\"PUT\", \"**/orders/add\").as(\"addCart2\");\ncy.get(\"button[data-cy='detail-product-add']\").click();\ncy.wait(\"@addCart2\", {\n  timeout: 5000\n}).then(interception => {\n  cy.log(`📡 Status ajout produit 2 : ${interception.response.statusCode}`);\n  expect(interception.response.statusCode).to.eq(200);\n});\ncy.log(\"✅ ÉTAPE 2 — Produit 2 ajouté\");\n// ── ÉTAPE 3 : Page panier s'affiche automatiquement ───────\ncy.get(\"app-cart\", {\n  timeout: 6000\n}).should(\"be.visible\");\ncy.url({\n  timeout: 6000\n}).should(\"include\", \"/cart\");\ncy.log(\"✅ ÉTAPE 3 — Page panier chargée\");\n// ── ÉTAPE 4 : Vérifier toutes les lignes du panier ────────\ncy.get(\"[data-cy='cart-line']\", {\n  timeout: 6000\n}).then($lines => {\n  const total = $lines.length;\n  cy.log(`📋 Nombre total de lignes dans le panier : ${total}`);\n  if (total < 2) {\n    cy.log(`⚠️ ANO-UI-02 — Panier incomplet : ${total} ligne(s) trouvée(s), attendu ≥2`);\n  } else {\n    cy.log(`✅ ÉTAPE 4 — ${total} ligne(s) confirmée(s) dans le panier`);\n  }\n});\n// ── ÉTAPES 5-N : Supprimer toutes les lignes une par une ──\nconst supprimerToutesLesLignes = () => {\n  cy.get(\"body\").then($body => {\n    if ($body.find(\"[data-cy='cart-line-delete']\").length > 0) {\n      cy.intercept(\"DELETE\", \"**/orders/**/delete\").as(\"deleteOneLine\");\n      // ✅ forcer le re-query après re-render Angular\n      cy.get(\"[data-cy='cart-line-delete']\", {\n        timeout: 6000\n      }).should(\"exist\").first().click({\n        force: true\n      });\n      cy.wait(\"@deleteOneLine\", {\n        timeout: 6000\n      }).then(interception => {\n        cy.log(`📡 Status suppression ligne : ${interception.response.statusCode}`);\n        expect(interception.response.statusCode).to.be.oneOf([200, 204]);\n      });\n      // ✅ attendre que Angular re-rende le DOM avant récursion\n      cy.wait(500);\n      supprimerToutesLesLignes();\n    }\n  });\n};\nsupprimerToutesLesLignes();\n// ── ÉTAPE FINALE : Vérifier message panier vide ───────────\ncy.get(\"app-cart\", {\n  timeout: 6000\n}).should(\"be.visible\");\ncy.contains(\"h1\", \"Commande\").should(\"be.visible\");\ncy.contains(\"h2\", \"Panier\").should(\"be.visible\");\ncy.contains(\"p\", \"Votre panier est vide\").should(\"be.visible\");\ncy.get(\"section.cart-section p a\").should(\"be.visible\").and(\"contain\", \"Consultez nos produits\");\ncy.log(\"✅ ÉTAPE FINALE — Message panier vide confirmé\");\n// ── ÉTAPE 8 : Clic \"Consultez nos produits\" → page produits\ncy.intercept(\"GET\", \"**/products\").as(\"getProductsFinal\");\ncy.get(\"section.cart-section p a\").click();\ncy.wait(\"@getProductsFinal\", {\n  timeout: 5000\n}).then(interception => {\n  cy.log(`📡 Status redirection produits : ${interception.response.statusCode}`);\n  expect(interception.response.statusCode).to.eq(200);\n});\ncy.url().should(\"include\", \"/products\");\ncy.get(\"article.mini-product\", {\n  timeout: 6000\n}).should(\"have.length.above\", 0);\ncy.log(\"✅ TEST 2 — Fin : redirection vers page produits confirmée\");",
+              "err": {
+                "message": "CypressError: Timed out retrying after 5000ms: `cy.wait()` timed out waiting `5000ms` for the 1st request to the route: `addCart2`. No request ever occurred.\n\nhttps://on.cypress.io/wait",
+                "estack": "CypressError: Timed out retrying after 5000ms: `cy.wait()` timed out waiting `5000ms` for the 1st request to the route: `addCart2`. No request ever occurred.\n\nhttps://on.cypress.io/wait\n    at cypressErr (http://localhost:4200/__cypress/runner/cypress_runner.js:78375:18)\n    at Object.errByPath (http://localhost:4200/__cypress/runner/cypress_runner.js:78443:10)\n    at checkForXhr (http://localhost:4200/__cypress/runner/cypress_runner.js:138930:84)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:138955:28)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise.attempt.Promise.try (http://localhost:4200/__cypress/runner/cypress_runner.js:4285:29)\n    at whenStable (http://localhost:4200/__cypress/runner/cypress_runner.js:152022:68)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:151963:14)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise._settlePromiseFromHandler (http://localhost:4200/__cypress/runner/cypress_runner.js:1489:31)\n    at Promise._settlePromise (http://localhost:4200/__cypress/runner/cypress_runner.js:1546:18)\n    at Promise._settlePromise0 (http://localhost:4200/__cypress/runner/cypress_runner.js:1591:10)\n    at Promise._settlePromises (http://localhost:4200/__cypress/runner/cypress_runner.js:1671:18)\n    at Promise._fulfill (http://localhost:4200/__cypress/runner/cypress_runner.js:1615:18)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:5420:46)",
+                "diff": null
+              },
+              "uuid": "07173673-9130-4dc2-bcc5-bda102608b6f",
+              "parentUUID": "b61fe9bc-f957-4156-b391-6eb1467fb14f",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "4 - Ajouter au panier avec quantité 0 doit être refusé (stock:39)",
+              "fullTitle": "Panier - Tests UI 4 - Ajouter au panier avec quantité 0 doit être refusé (stock:39)",
+              "timedOut": null,
+              "duration": 6797,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "allerVersPageProduit(PRODUCTS.normal);\ncy.get(\"input[type='number']\").clear().type(\"0\");\ncy.contains(\"button\", \"Ajouter au panier\").click();\ncy.wait(3000);\ncy.url().then(url => {\n  if (url.includes(\"/cart\")) {\n    signalerAnomalie(\"ANO-BACK-01\", \"DEFECT HIGH — qty=0 acceptée, redirection vers /cart\", \"Attendu : ajout refusé | Observé : commande créée avec qty=0\");\n  }\n  cy.log(\"✅ TEST 4 — qty=0 correctement refusée\");\n});",
+              "err": {
+                "message": "Error: ❌ [ANO-BACK-01] DEFECT HIGH — qty=0 acceptée, redirection vers /cart | Attendu : ajout refusé | Observé : commande créée avec qty=0",
+                "estack": "Error: ❌ [ANO-BACK-01] DEFECT HIGH — qty=0 acceptée, redirection vers /cart | Attendu : ajout refusé | Observé : commande créée avec qty=0\n    at signalerAnomalie (webpack:///./E2Ecypress/e2e/uiTests/cart.cy.js:33:8)\n    at Context.eval (webpack:///./E2Ecypress/e2e/uiTests/cart.cy.js:204:8)\n    at getRet (http://localhost:4200/__cypress/runner/cypress_runner.js:122806:20)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise.attempt.Promise.try (http://localhost:4200/__cypress/runner/cypress_runner.js:4285:29)\n    at Context.thenFn (http://localhost:4200/__cypress/runner/cypress_runner.js:122817:66)\n    at Context.then (http://localhost:4200/__cypress/runner/cypress_runner.js:123068:21)\n    at wrapped (http://localhost:4200/__cypress/runner/cypress_runner.js:146326:19)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:152294:15)",
+                "diff": null
+              },
+              "uuid": "7800ca29-383b-4c11-8550-2237446b2732",
+              "parentUUID": "b61fe9bc-f957-4156-b391-6eb1467fb14f",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "6 - Quantité supérieure au stock disponible doit être refusée (stock:3)",
+              "fullTitle": "Panier - Tests UI 6 - Quantité supérieure au stock disponible doit être refusée (stock:3)",
+              "timedOut": null,
+              "duration": 7221,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "allerVersPageProduit(PRODUCTS.faible);\ncy.get(\"input[type='number']\").clear().type(\"5\");\ncy.contains(\"button\", \"Ajouter au panier\").click();\ncy.wait(3000);\ncy.url().then(url => {\n  if (url.includes(\"/cart\")) {\n    cy.request(\"GET\", `${Cypress.env(\"apiUrl\")}/products/${PRODUCTS.faible.id}`).its(\"body.availableStock\").then(stock => {\n      signalerAnomalie(\"ANO-BACK-02\", `DEFECT HIGH — qty=5 acceptée alors que stock=${PRODUCTS.faible.stock}`, `Attendu : ajout refusé | Observé : stock après ajout = ${stock}`);\n    });\n  } else {\n    cy.log(`✅ TEST 6 — qty=5 refusée (stock:${PRODUCTS.faible.stock})`);\n  }\n});",
+              "err": {
+                "message": "Error: ❌ [ANO-BACK-02] DEFECT HIGH — qty=5 acceptée alors que stock=3 | Attendu : ajout refusé | Observé : stock après ajout = -12",
+                "estack": "Error: ❌ [ANO-BACK-02] DEFECT HIGH — qty=5 acceptée alors que stock=3 | Attendu : ajout refusé | Observé : stock après ajout = -12\n    at signalerAnomalie (webpack:///./E2Ecypress/e2e/uiTests/cart.cy.js:33:8)\n    at Context.eval (webpack:///./E2Ecypress/e2e/uiTests/cart.cy.js:229:12)\n    at getRet (http://localhost:4200/__cypress/runner/cypress_runner.js:122806:20)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise.attempt.Promise.try (http://localhost:4200/__cypress/runner/cypress_runner.js:4285:29)\n    at Context.thenFn (http://localhost:4200/__cypress/runner/cypress_runner.js:122817:66)\n    at Context.then (http://localhost:4200/__cypress/runner/cypress_runner.js:123068:21)\n    at wrapped (http://localhost:4200/__cypress/runner/cypress_runner.js:146326:19)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:152294:15)",
+                "diff": null
+              },
+              "uuid": "fe3cae41-25a5-407a-abb4-47c79ecfbd8d",
+              "parentUUID": "b61fe9bc-f957-4156-b391-6eb1467fb14f",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "7 - Produit en rupture de stock ne peut pas être ajouté au panier (stock:0)",
+              "fullTitle": "Panier - Tests UI 7 - Produit en rupture de stock ne peut pas être ajouté au panier (stock:0)",
+              "timedOut": null,
+              "duration": 4844,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "allerVersPageProduit(PRODUCTS.rupture);\ncy.get(\"body\").then($body => {\n  const btn = $body.find(\"button:contains('Ajouter au panier')\");\n  if (btn.length === 0) {\n    cy.log(\"✅ TEST 7 — Bouton absent (stock:0)\");\n  } else if (btn.is(\":disabled\")) {\n    cy.log(\"✅ TEST 7 — Bouton désactivé (stock:0)\");\n  } else {\n    cy.contains(\"button\", \"Ajouter au panier\").click();\n    cy.wait(2000);\n    cy.request(\"GET\", `${Cypress.env(\"apiUrl\")}/products/${PRODUCTS.rupture.id}`).its(\"body.availableStock\").then(stock => {\n      signalerAnomalie(\"ANO-BACK-03\", \"DEFECT HIGH — Bouton actif sur produit en rupture (stock:0)\", `Attendu : bouton désactivé | Observé : ajout possible, stock = ${stock}`);\n    });\n  }\n});",
+              "err": {
+                "message": "Error: ❌ [ANO-BACK-03] DEFECT HIGH — Bouton actif sur produit en rupture (stock:0) | Attendu : bouton désactivé | Observé : ajout possible, stock = -2",
+                "estack": "Error: ❌ [ANO-BACK-03] DEFECT HIGH — Bouton actif sur produit en rupture (stock:0) | Attendu : bouton désactivé | Observé : ajout possible, stock = -2\n    at signalerAnomalie (webpack:///./E2Ecypress/e2e/uiTests/cart.cy.js:33:8)\n    at Context.eval (webpack:///./E2Ecypress/e2e/uiTests/cart.cy.js:261:12)\n    at getRet (http://localhost:4200/__cypress/runner/cypress_runner.js:122806:20)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise.attempt.Promise.try (http://localhost:4200/__cypress/runner/cypress_runner.js:4285:29)\n    at Context.thenFn (http://localhost:4200/__cypress/runner/cypress_runner.js:122817:66)\n    at Context.then (http://localhost:4200/__cypress/runner/cypress_runner.js:123068:21)\n    at wrapped (http://localhost:4200/__cypress/runner/cypress_runner.js:146326:19)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:152294:15)",
+                "diff": null
+              },
+              "uuid": "6bc9cc80-f6f1-41f5-a67d-6a650bc1ef72",
+              "parentUUID": "b61fe9bc-f957-4156-b391-6eb1467fb14f",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "8 - Pas de duplication de ligne pour un produit déjà dans le panier (stock:39)",
+              "fullTitle": "Panier - Tests UI 8 - Pas de duplication de ligne pour un produit déjà dans le panier (stock:39)",
+              "timedOut": null,
+              "duration": 3829,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "allerVersPageProduit(PRODUCTS.normal);\ncy.get(\"input[type='number']\").clear().type(\"1\");\ncy.contains(\"button\", \"Ajouter au panier\").click();\ncy.url().should(\"include\", \"/cart\");\nallerVersPageProduit(PRODUCTS.normal);\ncy.get(\"input[type='number']\").clear().type(\"2\");\ncy.contains(\"button\", \"Ajouter au panier\").click();\ncy.url().should(\"include\", \"/cart\");\ncy.get(\"[data-cy='cart-line-name'], td, .cart-item\").filter(`:contains(\"${PRODUCTS.normal.name}\")`).then($els => {\n  if ($els.length > 1) {\n    signalerAnomalie(\"ANO-UI-04\", `DEFECT MEDIUM — Duplication de ligne détectée pour ${PRODUCTS.normal.name}`, `Attendu : 1 ligne | Observé : ${$els.length} lignes`);\n  }\n  cy.log(`✅ TEST 8 — Pas de duplication pour ${PRODUCTS.normal.name}`);\n});",
+              "err": {},
+              "uuid": "89dec7a0-c99e-460e-835d-d45f6e0d1da4",
+              "parentUUID": "b61fe9bc-f957-4156-b391-6eb1467fb14f",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "9 - Ajouter au panier avec quantité 0 doit être refusé",
+              "fullTitle": "Panier - Tests UI 9 - Ajouter au panier avec quantité 0 doit être refusé",
+              "timedOut": null,
+              "duration": 6111,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "allerVersPageProduit(PRODUCTS.normal);\ncy.get(\"input[type='number']\").clear().type(\"0\");\ncy.contains(\"button\", \"Ajouter au panier\").click();\ncy.wait(3000);\ncy.url().then(url => {\n  if (url.includes(\"/cart\")) {\n    signalerAnomalie(\"ANO-BACK-01\", \"DEFECT HIGH — qty=0 acceptée, commande confirmable\", \"Attendu : ajout refusé | Observé : ligne qty=0 dans le panier\");\n  }\n  cy.log(\"✅ TEST 9 — qty=0 correctement refusée\");\n});",
+              "err": {
+                "message": "Error: ❌ [ANO-BACK-01] DEFECT HIGH — qty=0 acceptée, commande confirmable | Attendu : ajout refusé | Observé : ligne qty=0 dans le panier",
+                "estack": "Error: ❌ [ANO-BACK-01] DEFECT HIGH — qty=0 acceptée, commande confirmable | Attendu : ajout refusé | Observé : ligne qty=0 dans le panier\n    at signalerAnomalie (webpack:///./E2Ecypress/e2e/uiTests/cart.cy.js:33:8)\n    at Context.eval (webpack:///./E2Ecypress/e2e/uiTests/cart.cy.js:306:8)\n    at getRet (http://localhost:4200/__cypress/runner/cypress_runner.js:122806:20)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise.attempt.Promise.try (http://localhost:4200/__cypress/runner/cypress_runner.js:4285:29)\n    at Context.thenFn (http://localhost:4200/__cypress/runner/cypress_runner.js:122817:66)\n    at Context.then (http://localhost:4200/__cypress/runner/cypress_runner.js:123068:21)\n    at wrapped (http://localhost:4200/__cypress/runner/cypress_runner.js:146326:19)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:152294:15)",
+                "diff": null
+              },
+              "uuid": "60cfa165-c1d1-4200-9f3b-93b8aaeed03b",
+              "parentUUID": "b61fe9bc-f957-4156-b391-6eb1467fb14f",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "10 - Ajouter au panier avec quantité négative doit être refusé",
+              "fullTitle": "Panier - Tests UI 10 - Ajouter au panier avec quantité négative doit être refusé",
+              "timedOut": null,
+              "duration": 4422,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "allerVersPageProduit(PRODUCTS.normal);\ncy.get(\"input[type='number']\").clear().type(\"-2\");\ncy.contains(\"button\", \"Ajouter au panier\").click();\ncy.wait(3000);\ncy.url().then(url => {\n  if (url.includes(\"/cart\")) {\n    cy.request(\"GET\", `${Cypress.env(\"apiUrl\")}/products/${PRODUCTS.normal.id}`).its(\"body.availableStock\").then(stock => {\n      const detail = stock > PRODUCTS.normal.stock ? `Stock crédité : ${stock} (augmenté)` : stock < 0 ? `Stock négatif : ${stock}` : `Stock = ${stock}`;\n      signalerAnomalie(\"ANO-BACK-05\", \"DEFECT HIGH — qty=-2 acceptée par le système\", `Attendu : ajout refusé | Observé : redirection /cart | ${detail}`);\n    });\n  } else {\n    cy.log(\"✅ TEST 10 — qty=-2 correctement refusée\");\n  }\n});",
+              "err": {},
+              "uuid": "5db62043-acf0-4172-9783-57cd46eff76a",
+              "parentUUID": "b61fe9bc-f957-4156-b391-6eb1467fb14f",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "89dec7a0-c99e-460e-835d-d45f6e0d1da4",
+            "5db62043-acf0-4172-9783-57cd46eff76a"
+          ],
+          "failures": [
+            "6e58cec5-bb9b-4cac-b68e-2c2bd8a59a0e",
+            "07173673-9130-4dc2-bcc5-bda102608b6f",
+            "7800ca29-383b-4c11-8550-2237446b2732",
+            "fe3cae41-25a5-407a-abb4-47c79ecfbd8d",
+            "6bc9cc80-f6f1-41f5-a67d-6a650bc1ef72",
+            "60cfa165-c1d1-4200-9f3b-93b8aaeed03b"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 51781,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "E2Ecypress/reports",
+        "overwrite": false,
+        "json": true,
+        "html": false
+      },
+      "version": "6.3.2"
+    }
+  }
+}

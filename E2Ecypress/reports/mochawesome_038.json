@@ -1,0 +1,200 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 6,
+    "passes": 6,
+    "pending": 0,
+    "failures": 0,
+    "start": "2026-03-17T22:11:46.301Z",
+    "end": "2026-03-17T22:11:48.765Z",
+    "duration": 2464,
+    "testsRegistered": 6,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "5fb53dae-4c40-41c8-be06-a61b90508418",
+      "title": "",
+      "fullFile": "E2Ecypress\\e2e\\apiTests\\api-auth.cy.js",
+      "file": "E2Ecypress\\e2e\\apiTests\\api-auth.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "8634f3d8-1dd6-452e-ad02-95689f20070b",
+          "title": "API - Authentification",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "1 - API Register - Status 200/201",
+              "fullTitle": "API - Authentification 1 - API Register - Status 200/201",
+              "timedOut": null,
+              "duration": 706,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const timestamp = Date.now();\n(0, _apiAuth.register)(`demo_${timestamp}`, `user_${timestamp}`, `demo_${timestamp}@example.com`, \"testtest\", false).then(res => {\n  cy.log(`📡 Status : ${res.status}`);\n  if (![200, 201].includes(res.status)) {\n    anomalie(\"ANO-AUTH-01\", \"DEFECT HIGH — Inscription refusée pour un nouvel utilisateur\", `Attendu : 200 ou 201 | Observé : ${res.status}`);\n  }\n  cy.log(\"✅ AUTH-1 — Inscription réussie\");\n});",
+              "err": {},
+              "uuid": "b3fc3847-4ea7-4988-8c81-e262a1bcb06c",
+              "parentUUID": "8634f3d8-1dd6-452e-ad02-95689f20070b",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "2 - API Register - Email existant - Status 400/422",
+              "fullTitle": "API - Authentification 2 - API Register - Email existant - Status 400/422",
+              "timedOut": null,
+              "duration": 202,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiAuth.register)(\"ramo\", \"victor\", \"ramoshippuden@gmail.com\", \"testtest\", false).then(res => {\n  cy.log(`📡 Status : ${res.status}`);\n  if (![400, 422].includes(res.status)) {\n    anomalie(\"ANO-AUTH-02\", \"DEFECT HIGH — Email existant accepté à l'inscription\", `Attendu : 400 ou 422 | Observé : ${res.status}`);\n  }\n  cy.log(`✅ AUTH-2 — Email existant refusé (${res.status})`);\n});",
+              "err": {},
+              "uuid": "16b9383a-82b1-43cc-8ead-b1ee474c6e40",
+              "parentUUID": "8634f3d8-1dd6-452e-ad02-95689f20070b",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "3 - API Login - Status 200 + token",
+              "fullTitle": "API - Authentification 3 - API Login - Status 200 + token",
+              "timedOut": null,
+              "duration": 594,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiAuth.login)(\"ramoshippuden@gmail.com\", \"testtest\", false).then(res => {\n  cy.log(`📡 Status : ${res.status}`);\n  if (res.status !== 200) {\n    anomalie(\"ANO-AUTH-03\", \"DEFECT CRITICAL — Connexion refusée pour un utilisateur valide\", `Attendu : 200 | Observé : ${res.status}`);\n  }\n  if (!res.body.token) {\n    anomalie(\"ANO-AUTH-03\", \"DEFECT CRITICAL — Token absent dans la réponse de connexion\", `Body reçu : ${JSON.stringify(res.body)}`);\n  }\n  cy.log(`✅ AUTH-3 — Connexion OK, token reçu`);\n});",
+              "err": {},
+              "uuid": "9cafe393-045e-48d1-a35b-e983d978485a",
+              "parentUUID": "8634f3d8-1dd6-452e-ad02-95689f20070b",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "4 - API Login - Email invalide - Status 401",
+              "fullTitle": "API - Authentification 4 - API Login - Email invalide - Status 401",
+              "timedOut": null,
+              "duration": 118,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiAuth.login)(\"emailinvalide\", \"testtest\", false).then(res => {\n  cy.log(`📡 Status : ${res.status}`);\n  if (res.status !== 401) {\n    anomalie(\"ANO-AUTH-04\", \"DEFECT HIGH — Email invalide accepté à la connexion\", `Attendu : 401 | Observé : ${res.status}`);\n  }\n  cy.log(`✅ AUTH-4 — Email invalide refusé (${res.status})`);\n});",
+              "err": {},
+              "uuid": "4ee4a68a-61fb-4688-9a42-1dc05e1370f0",
+              "parentUUID": "8634f3d8-1dd6-452e-ad02-95689f20070b",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "5 - API Login - Email inexistant - Status 401",
+              "fullTitle": "API - Authentification 5 - API Login - Email inexistant - Status 401",
+              "timedOut": null,
+              "duration": 130,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const fakeEmail = _faker.faker.internet.email();\nconst fakePassword = _faker.faker.internet.password();\n(0, _apiAuth.login)(fakeEmail, fakePassword, false).then(res => {\n  cy.log(`📡 Status : ${res.status}`);\n  if (res.status !== 401) {\n    anomalie(\"ANO-AUTH-05\", \"DEFECT HIGH — Email inexistant accepté à la connexion\", `Email : ${fakeEmail} | Attendu : 401 | Observé : ${res.status}`);\n  }\n  cy.writeFile(\"cypress/logs/auth_failure.json\", {\n    username: fakeEmail,\n    password: fakePassword,\n    status: res.status,\n    timestamp: new Date().toISOString()\n  });\n  cy.log(`✅ AUTH-5 — Email inexistant refusé (${res.status})`);\n});",
+              "err": {},
+              "uuid": "5396a572-fa0e-429f-af20-1e70100867fe",
+              "parentUUID": "8634f3d8-1dd6-452e-ad02-95689f20070b",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "6 - API Login - Mauvais mot de passe - Status 401",
+              "fullTitle": "API - Authentification 6 - API Login - Mauvais mot de passe - Status 401",
+              "timedOut": null,
+              "duration": 566,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiAuth.login)(\"ramoshippuden@gmail.com\", \"mauvaismdp\", false).then(res => {\n  cy.log(`📡 Status : ${res.status}`);\n  if (res.status !== 401) {\n    anomalie(\"ANO-AUTH-06\", \"DEFECT HIGH — Mauvais mot de passe accepté à la connexion\", `Attendu : 401 | Observé : ${res.status}`);\n  }\n  cy.log(`✅ AUTH-6 — Mauvais mot de passe refusé (${res.status})`);\n});",
+              "err": {},
+              "uuid": "0e894187-c685-447d-9e38-63b6e567023a",
+              "parentUUID": "8634f3d8-1dd6-452e-ad02-95689f20070b",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "b3fc3847-4ea7-4988-8c81-e262a1bcb06c",
+            "16b9383a-82b1-43cc-8ead-b1ee474c6e40",
+            "9cafe393-045e-48d1-a35b-e983d978485a",
+            "4ee4a68a-61fb-4688-9a42-1dc05e1370f0",
+            "5396a572-fa0e-429f-af20-1e70100867fe",
+            "0e894187-c685-447d-9e38-63b6e567023a"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 2316,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "E2Ecypress/reports",
+        "overwrite": false,
+        "json": true,
+        "html": false
+      },
+      "version": "6.3.2"
+    }
+  }
+}

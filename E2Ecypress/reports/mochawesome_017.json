@@ -1,0 +1,228 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 7,
+    "passes": 5,
+    "pending": 0,
+    "failures": 2,
+    "start": "2026-03-17T19:17:39.711Z",
+    "end": "2026-03-17T19:17:57.907Z",
+    "duration": 18196,
+    "testsRegistered": 7,
+    "passPercent": 71.42857142857143,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "ca839d39-71a5-4189-aa19-d3a9f1e6585a",
+      "title": "",
+      "fullFile": "E2Ecypress\\e2e\\uiTests\\register-athen.cy.js",
+      "file": "E2Ecypress\\e2e\\uiTests\\register-athen.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "a417e41d-d7a7-4587-8138-45f45a1b3339",
+          "title": "Authentification - Inscription et Connexion",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "1 - Créer un compte utilisateur avec succès",
+              "fullTitle": "Authentification - Inscription et Connexion 1 - Créer un compte utilisateur avec succès",
+              "timedOut": null,
+              "duration": 2359,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "cy.contains(\"a\", \"Inscription\").click();\ncy.url().should(\"include\", \"/register\");\ncy.get(\"#lastname\").type(lastname);\ncy.get(\"#firstname\").type(firstname);\ncy.get(\"#email\").type(email);\ncy.get(\"#password\").type(password);\ncy.get(\"#confirm\").type(password);\ncy.get('[data-cy=\"register-submit\"]').click();\nlogAlerte();\ncy.url({\n  timeout: 10000\n}).then(url => {\n  if (url.includes(\"/register\")) {\n    signalerAnomalie(\"ANO-AUTH-01\", \"DEFECT HIGH — Inscription échouée, toujours sur /register\", `Attendu : redirection hors /register | Observé : ${url}`);\n  }\n  cy.log(`✅ TEST 1 — Inscription réussie pour ${email}`);\n});\ncy.contains(\"a\", \"Déconnexion\").then($el => {\n  if (!$el.is(\":visible\")) {\n    signalerAnomalie(\"ANO-AUTH-01\", \"DEFECT HIGH — Lien Déconnexion absent après inscription\", \"Attendu : utilisateur connecté | Observé : lien Déconnexion manquant\");\n  }\n}).click();\ncy.url().should(\"include\", \"/\");",
+              "err": {
+                "message": "Error: ❌ [ANO-AUTH-01] DEFECT HIGH — Inscription échouée, toujours sur /register | Attendu : redirection hors /register | Observé : http://localhost:4200/#/register",
+                "estack": "Error: ❌ [ANO-AUTH-01] DEFECT HIGH — Inscription échouée, toujours sur /register | Attendu : redirection hors /register | Observé : http://localhost:4200/#/register\n    at signalerAnomalie (webpack:///./E2Ecypress/e2e/uiTests/register-athen.cy.js:33:10)\n    at Context.eval (webpack:///./E2Ecypress/e2e/uiTests/register-athen.cy.js:49:8)\n    at getRet (http://localhost:4200/__cypress/runner/cypress_runner.js:122806:20)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise.attempt.Promise.try (http://localhost:4200/__cypress/runner/cypress_runner.js:4285:29)\n    at Context.thenFn (http://localhost:4200/__cypress/runner/cypress_runner.js:122817:66)\n    at Context.then (http://localhost:4200/__cypress/runner/cypress_runner.js:123068:21)\n    at wrapped (http://localhost:4200/__cypress/runner/cypress_runner.js:146326:19)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:152294:15)",
+                "diff": null
+              },
+              "uuid": "4a70615d-3ad6-47b4-9df2-1ca6e10be844",
+              "parentUUID": "a417e41d-d7a7-4587-8138-45f45a1b3339",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "2 - Affiche une erreur si l'adresse mail est déjà utilisée",
+              "fullTitle": "Authentification - Inscription et Connexion 2 - Affiche une erreur si l'adresse mail est déjà utilisée",
+              "timedOut": null,
+              "duration": 1727,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.contains(\"a\", \"Inscription\").click();\ncy.url().should(\"include\", \"/register\");\ncy.get(\"#lastname\").type(\"ramo\");\ncy.get(\"#firstname\").type(\"victor\");\ncy.get(\"#email\").type(\"ramoshippuden@gmail.com\");\ncy.get(\"#password\").type(\"testtest\");\ncy.get(\"#confirm\").type(\"testtest\");\ncy.get('[data-cy=\"register-submit\"]').click();\nlogAlerte();\ncy.get(\"p.error\", {\n  timeout: 8000\n}).then($el => {\n  if (!$el.is(\":visible\")) {\n    signalerAnomalie(\"ANO-AUTH-02\", \"DEFECT HIGH — Aucun message d'erreur affiché pour email déjà utilisé\", \"Attendu : p.error visible | Observé : élément absent ou masqué\");\n  }\n  if (!$el.text().includes(\"Cette adresse mail est déjà utilisée\")) {\n    signalerAnomalie(\"ANO-AUTH-02\", \"DEFECT MEDIUM — Message d'erreur incorrect pour email déjà utilisé\", `Attendu : \"Cette adresse mail est déjà utilisée\" | Observé : \"${$el.text()}\"`);\n  }\n  cy.log(`✅ TEST 2 — Erreur correctement affichée : ${$el.text()}`);\n});",
+              "err": {},
+              "uuid": "36cbabea-0ddd-46b6-9cf8-891b5c36708f",
+              "parentUUID": "a417e41d-d7a7-4587-8138-45f45a1b3339",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "3 - Connexion avec un compte existant",
+              "fullTitle": "Authentification - Inscription et Connexion 3 - Connexion avec un compte existant",
+              "timedOut": null,
+              "duration": 1606,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "cy.contains(\"a\", \"Accueil\").click();\ncy.contains(\"a\", \"Connexion\").click();\ncy.url().should(\"include\", \"/login\");\ncy.get(\"#username\").type(\"ramoshippuden@gmail.com\");\ncy.get(\"#password\").type(\"testtest\");\ncy.contains(\"span\", \"Se connecter\").click();\nlogAlerte();\ncy.url({\n  timeout: 10000\n}).then(url => {\n  if (url.includes(\"/login\")) {\n    signalerAnomalie(\"ANO-AUTH-03\", \"DEFECT HIGH — Connexion échouée, toujours sur /login\", `Attendu : redirection hors /login | Observé : ${url}`);\n  }\n  cy.log(\"✅ TEST 3 — Connexion réussie\");\n});\ncy.contains(\"a\", \"Déconnexion\").then($el => {\n  if (!$el.is(\":visible\")) {\n    signalerAnomalie(\"ANO-AUTH-03\", \"DEFECT HIGH — Lien Déconnexion absent après connexion\", \"Attendu : utilisateur connecté | Observé : lien Déconnexion manquant\");\n  }\n  cy.log(\"✅ TEST 3 — Lien Déconnexion visible\");\n});",
+              "err": {
+                "message": "Error: ❌ [ANO-AUTH-03] DEFECT HIGH — Connexion échouée, toujours sur /login | Attendu : redirection hors /login | Observé : http://localhost:4200/#/login",
+                "estack": "Error: ❌ [ANO-AUTH-03] DEFECT HIGH — Connexion échouée, toujours sur /login | Attendu : redirection hors /login | Observé : http://localhost:4200/#/login\n    at signalerAnomalie (webpack:///./E2Ecypress/e2e/uiTests/register-athen.cy.js:33:10)\n    at Context.eval (webpack:///./E2Ecypress/e2e/uiTests/register-athen.cy.js:112:8)\n    at getRet (http://localhost:4200/__cypress/runner/cypress_runner.js:122806:20)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise.attempt.Promise.try (http://localhost:4200/__cypress/runner/cypress_runner.js:4285:29)\n    at Context.thenFn (http://localhost:4200/__cypress/runner/cypress_runner.js:122817:66)\n    at Context.then (http://localhost:4200/__cypress/runner/cypress_runner.js:123068:21)\n    at wrapped (http://localhost:4200/__cypress/runner/cypress_runner.js:146326:19)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:152294:15)",
+                "diff": null
+              },
+              "uuid": "51c336f4-27a9-4ef9-84e7-59d417cb45c9",
+              "parentUUID": "a417e41d-d7a7-4587-8138-45f45a1b3339",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "4 - Connexion échoue avec email au mauvais format",
+              "fullTitle": "Authentification - Inscription et Connexion 4 - Connexion échoue avec email au mauvais format",
+              "timedOut": null,
+              "duration": 882,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.contains(\"a\", \"Connexion\").click();\ncy.get(\"#username\").type(\"emailinvalide\");\ncy.get(\"#password\").type(\"testtest\");\ncy.contains(\"span\", \"Se connecter\").click();\nlogAlerte();\ncy.get(\"p.error\", {\n  timeout: 8000\n}).then($el => {\n  if (!$el.is(\":visible\")) {\n    signalerAnomalie(\"ANO-AUTH-04\", \"DEFECT HIGH — Aucun message d'erreur affiché pour email au mauvais format\", \"Attendu : p.error visible | Observé : élément absent ou masqué\");\n  }\n  cy.log(`✅ TEST 4 — Erreur format email affichée : ${$el.text()}`);\n});",
+              "err": {},
+              "uuid": "6c3fba18-be48-49ca-a016-c613c9713dae",
+              "parentUUID": "a417e41d-d7a7-4587-8138-45f45a1b3339",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "5 - Connexion échoue avec email inexistant",
+              "fullTitle": "Authentification - Inscription et Connexion 5 - Connexion échoue avec email inexistant",
+              "timedOut": null,
+              "duration": 1038,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.contains(\"a\", \"Connexion\").click();\ncy.get(\"#username\").type(\"inexistant@example.com\");\ncy.get(\"#password\").type(\"testtest\");\ncy.contains(\"span\", \"Se connecter\").click();\nlogAlerte();\ncy.get(\"p.error\", {\n  timeout: 8000\n}).then($el => {\n  if (!$el.is(\":visible\")) {\n    signalerAnomalie(\"ANO-AUTH-05\", \"DEFECT HIGH — Aucun message d'erreur affiché pour email inexistant\", \"Attendu : p.error visible | Observé : élément absent ou masqué\");\n  }\n  cy.log(`✅ TEST 5 — Erreur email inexistant affichée : ${$el.text()}`);\n});",
+              "err": {},
+              "uuid": "989d8bfb-6dd9-4f84-b5ea-dc9dfa8e8303",
+              "parentUUID": "a417e41d-d7a7-4587-8138-45f45a1b3339",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "6 - Connexion échoue avec email vide",
+              "fullTitle": "Authentification - Inscription et Connexion 6 - Connexion échoue avec email vide",
+              "timedOut": null,
+              "duration": 545,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.contains(\"a\", \"Connexion\").click();\ncy.get(\"#password\").type(\"testtest\");\ncy.contains(\"span\", \"Se connecter\").click();\nlogAlerte();\ncy.get(\"p.error\", {\n  timeout: 8000\n}).then($el => {\n  if (!$el.is(\":visible\")) {\n    signalerAnomalie(\"ANO-AUTH-06\", \"DEFECT HIGH — Aucun message d'erreur affiché pour email vide\", \"Attendu : p.error visible | Observé : élément absent ou masqué\");\n  }\n  if (!$el.text().includes(\"Merci de remplir correctement tous les champs\")) {\n    signalerAnomalie(\"ANO-AUTH-06\", \"DEFECT MEDIUM — Message d'erreur incorrect pour email vide\", `Attendu : \"Merci de remplir correctement tous les champs\" | Observé : \"${$el.text()}\"`);\n  }\n  cy.log(`✅ TEST 6 — Erreur email vide affichée : ${$el.text()}`);\n});\ncy.get(\"label\").contains(\"Email\").then($label => {\n  if (!$label.hasClass(\"error\")) {\n    signalerAnomalie(\"ANO-AUTH-06\", \"DEFECT LOW — Label Email non mis en rouge (classe error absente)\", \"Attendu : label.error | Observé : classe error manquante\");\n  }\n  cy.log(\"✅ TEST 6 — Label Email en rouge (classe error présente)\");\n});",
+              "err": {},
+              "uuid": "8870ada8-52a2-4740-bef8-8b99711b14d8",
+              "parentUUID": "a417e41d-d7a7-4587-8138-45f45a1b3339",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "7 - Connexion échoue avec mot de passe erroné",
+              "fullTitle": "Authentification - Inscription et Connexion 7 - Connexion échoue avec mot de passe erroné",
+              "timedOut": null,
+              "duration": 1462,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.contains(\"a\", \"Connexion\").click();\ncy.get(\"#username\").type(\"ramoshippuden@gmail.com\");\ncy.get(\"#password\").type(\"mauvaismdp\");\ncy.contains(\"span\", \"Se connecter\").click();\nlogAlerte();\ncy.get(\"p.error\", {\n  timeout: 8000\n}).then($el => {\n  if (!$el.is(\":visible\")) {\n    signalerAnomalie(\"ANO-AUTH-07\", \"DEFECT HIGH — Aucun message d'erreur affiché pour mot de passe erroné\", \"Attendu : p.error visible | Observé : élément absent ou masqué\");\n  }\n  cy.log(`✅ TEST 7 — Erreur mot de passe erroné affichée : ${$el.text()}`);\n});",
+              "err": {},
+              "uuid": "01d72b5c-a6cf-4dc0-804a-048476ed8342",
+              "parentUUID": "a417e41d-d7a7-4587-8138-45f45a1b3339",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "36cbabea-0ddd-46b6-9cf8-891b5c36708f",
+            "6c3fba18-be48-49ca-a016-c613c9713dae",
+            "989d8bfb-6dd9-4f84-b5ea-dc9dfa8e8303",
+            "8870ada8-52a2-4740-bef8-8b99711b14d8",
+            "01d72b5c-a6cf-4dc0-804a-048476ed8342"
+          ],
+          "failures": [
+            "4a70615d-3ad6-47b4-9df2-1ca6e10be844",
+            "51c336f4-27a9-4ef9-84e7-59d417cb45c9"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 9619,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "E2Ecypress/reports",
+        "overwrite": false,
+        "json": true,
+        "html": false
+      },
+      "version": "6.3.2"
+    }
+  }
+}

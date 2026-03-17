@@ -1,0 +1,328 @@
+{
+  "stats": {
+    "suites": 2,
+    "tests": 11,
+    "passes": 8,
+    "pending": 0,
+    "failures": 3,
+    "start": "2026-03-17T19:29:36.648Z",
+    "end": "2026-03-17T19:29:57.400Z",
+    "duration": 20752,
+    "testsRegistered": 11,
+    "passPercent": 72.72727272727273,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "9489f703-4111-4195-8c2d-2c67b0bec0f9",
+      "title": "",
+      "fullFile": "E2Ecypress\\e2e\\apiTests\\api-cart.cy.js",
+      "file": "E2Ecypress\\e2e\\apiTests\\api-cart.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "79c96adb-92e3-458a-88a8-b742eb88e021",
+          "title": "Panier - sans connexion",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "API-0a - GET /orders sans token doit retourner 401",
+              "fullTitle": "Panier - sans connexion API-0a - GET /orders sans token doit retourner 401",
+              "timedOut": null,
+              "duration": 174,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiCart.getCart)().then(res => {\n  if (res.status !== 401) {\n    anomalie(\"ANO-CART-0a\", \"DEFECT HIGH — Accès /orders autorisé sans token\", `Attendu : 401 | Observé : ${res.status}`);\n  }\n  cy.log(`✅ API-0a — Accès refusé sans token (${res.status})`);\n});",
+              "err": {},
+              "uuid": "40a1a48d-0cf4-46dc-8796-fa4aa375b6f9",
+              "parentUUID": "79c96adb-92e3-458a-88a8-b742eb88e021",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "40a1a48d-0cf4-46dc-8796-fa4aa375b6f9"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 174,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        },
+        {
+          "uuid": "4e9c627e-a1b5-4b64-8fbc-81b626c1d395",
+          "title": "Panier - utilisateur connecté",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "API-0b - GET /orders connecté doit retourner 200",
+              "fullTitle": "Panier - utilisateur connecté API-0b - GET /orders connecté doit retourner 200",
+              "timedOut": null,
+              "duration": 713,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiCart.getCart)(token).then(res => {\n  if (res.status !== 200) {\n    anomalie(\"ANO-CART-0b\", \"DEFECT HIGH — Panier inaccessible avec token valide\", `Attendu : 200 | Observé : ${res.status}`);\n  }\n  cy.log(`✅ API-0b — Panier accessible (${res.status})`);\n});",
+              "err": {},
+              "uuid": "fcd6bcc1-1f5f-42fd-be1d-f5b70b2277b4",
+              "parentUUID": "4e9c627e-a1b5-4b64-8fbc-81b626c1d395",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "API-1 - Ajouter quantité 3 sur produit stock:50",
+              "fullTitle": "Panier - utilisateur connecté API-1 - Ajouter quantité 3 sur produit stock:50",
+              "timedOut": null,
+              "duration": 682,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request({\n  method: \"PUT\",\n  url: `${API()}/orders/add`,\n  headers: {\n    Authorization: `Bearer ${token}`\n  },\n  body: {\n    product: PRODUCTS.normal.id,\n    quantity: 3\n  }\n}).then(res => {\n  var _res$body2;\n  if (![200, 201].includes(res.status)) {\n    anomalie(\"ANO-CART-01\", \"DEFECT HIGH — Ajout au panier refusé\", `Attendu : 200 ou 201 | Observé : ${res.status}`);\n  }\n  const lines = Array.isArray(res.body) ? res.body : ((_res$body2 = res.body) === null || _res$body2 === void 0 ? void 0 : _res$body2.orderLines) || [];\n  const line = lines.find(l => {\n    var _l$product;\n    return ((_l$product = l.product) === null || _l$product === void 0 ? void 0 : _l$product.id) === PRODUCTS.normal.id;\n  });\n  if (!line) {\n    anomalie(\"ANO-CART-01\", \"DEFECT HIGH — Ligne produit absente du panier après ajout\", `Produit attendu : id=${PRODUCTS.normal.id}`);\n  }\n  if (line.quantity !== 3) {\n    anomalie(\"ANO-CART-01\", \"DEFECT MEDIUM — Quantité incorrecte après ajout\", `Attendu : 3 | Observé : ${line.quantity}`);\n  }\n  cy.log(`✅ API-1 — Ajout OK, quantité : ${line.quantity}`);\n});",
+              "err": {},
+              "uuid": "05a55cd4-3fac-49bd-9858-283b1e22b0d8",
+              "parentUUID": "4e9c627e-a1b5-4b64-8fbc-81b626c1d395",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "API-2 - Supprimer une ligne du panier (stock:25)",
+              "fullTitle": "Panier - utilisateur connecté API-2 - Supprimer une ligne du panier (stock:25)",
+              "timedOut": null,
+              "duration": 1051,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request({\n  method: \"PUT\",\n  url: `${API()}/orders/add`,\n  headers: {\n    Authorization: `Bearer ${token}`\n  },\n  body: {\n    product: PRODUCTS.moyen.id,\n    quantity: 1\n  }\n}).then(res => {\n  var _res$body3;\n  const lines = Array.isArray(res.body) ? res.body : ((_res$body3 = res.body) === null || _res$body3 === void 0 ? void 0 : _res$body3.orderLines) || [];\n  const line = lines.find(l => {\n    var _l$product2;\n    return ((_l$product2 = l.product) === null || _l$product2 === void 0 ? void 0 : _l$product2.id) === PRODUCTS.moyen.id;\n  });\n  if (!line) {\n    anomalie(\"ANO-CART-02\", \"DEFECT HIGH — Ligne introuvable avant suppression\", `Produit attendu : id=${PRODUCTS.moyen.id}`);\n  }\n  orderLineId = line.id;\n  cy.request({\n    method: \"DELETE\",\n    url: `${API()}/orders/${orderLineId}/delete`,\n    headers: {\n      Authorization: `Bearer ${token}`\n    }\n  }).then(deleteRes => {\n    if (![200, 204].includes(deleteRes.status)) {\n      anomalie(\"ANO-CART-02\", \"DEFECT HIGH — Suppression de ligne refusée\", `Attendu : 200 ou 204 | Observé : ${deleteRes.status}`);\n    }\n    cy.request({\n      method: \"GET\",\n      url: `${API()}/orders`,\n      headers: {\n        Authorization: `Bearer ${token}`\n      }\n    }).then(cartRes => {\n      var _cartRes$body;\n      const remaining = (Array.isArray(cartRes.body) ? cartRes.body : ((_cartRes$body = cartRes.body) === null || _cartRes$body === void 0 ? void 0 : _cartRes$body.orderLines) || []).find(l => l.id === orderLineId);\n      if (remaining) {\n        anomalie(\"ANO-CART-02\", \"DEFECT HIGH — Ligne toujours présente après suppression\", `id ligne : ${orderLineId}`);\n      }\n      cy.log(`✅ API-2 — Ligne ${orderLineId} supprimée confirmée`);\n    });\n  });\n});",
+              "err": {},
+              "uuid": "a1021887-a4d8-404f-9111-9ac862626b2c",
+              "parentUUID": "4e9c627e-a1b5-4b64-8fbc-81b626c1d395",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "API-3 - Panier vide après suppression de toutes les lignes + stock restauré",
+              "fullTitle": "Panier - utilisateur connecté API-3 - Panier vide après suppression de toutes les lignes + stock restauré",
+              "timedOut": null,
+              "duration": 1194,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request({\n  method: \"GET\",\n  url: `${API()}/products/${PRODUCTS.normal.id}`\n}).then(productRes => {\n  const stockAvant = productRes.body.availableStock;\n  cy.request({\n    method: \"PUT\",\n    url: `${API()}/orders/add`,\n    headers: {\n      Authorization: `Bearer ${token}`\n    },\n    body: {\n      product: PRODUCTS.normal.id,\n      quantity: 1\n    }\n  }).then(res => {\n    var _res$body4;\n    const lines = Array.isArray(res.body) ? res.body : ((_res$body4 = res.body) === null || _res$body4 === void 0 ? void 0 : _res$body4.orderLines) || [];\n    lines.forEach(line => {\n      cy.request({\n        method: \"DELETE\",\n        url: `${API()}/orders/${line.id}/delete`,\n        headers: {\n          Authorization: `Bearer ${token}`\n        },\n        failOnStatusCode: false\n      });\n    });\n    cy.request({\n      method: \"GET\",\n      url: `${API()}/orders`,\n      headers: {\n        Authorization: `Bearer ${token}`\n      }\n    }).then(cartRes => {\n      var _cartRes$body2;\n      const remaining = Array.isArray(cartRes.body) ? cartRes.body : ((_cartRes$body2 = cartRes.body) === null || _cartRes$body2 === void 0 ? void 0 : _cartRes$body2.orderLines) || [];\n      if (remaining.length !== 0) {\n        anomalie(\"ANO-CART-03\", \"DEFECT HIGH — Panier non vide après suppression totale\", `Attendu : 0 ligne | Observé : ${remaining.length} ligne(s)`);\n      }\n      cy.log(\"✅ API-3 — Panier vide confirmé\");\n    });\n    cy.request({\n      method: \"GET\",\n      url: `${API()}/products/${PRODUCTS.normal.id}`\n    }).then(updatedRes => {\n      const stockApres = updatedRes.body.availableStock;\n      if (stockApres !== stockAvant) {\n        anomalie(\"ANO-CART-03\", \"DEFECT HIGH — Stock non restauré après suppression du panier\", `Attendu : ${stockAvant} | Observé : ${stockApres}`);\n      }\n      cy.log(`✅ API-3 — Stock restauré : ${stockAvant} → ${stockApres}`);\n    });\n  });\n});",
+              "err": {},
+              "uuid": "8f20f1b6-44fe-49ca-abce-4237f1930a84",
+              "parentUUID": "4e9c627e-a1b5-4b64-8fbc-81b626c1d395",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "API-4 - Quantité 0 doit être refusée (stock:50)",
+              "fullTitle": "Panier - utilisateur connecté API-4 - Quantité 0 doit être refusée (stock:50)",
+              "timedOut": null,
+              "duration": 974,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "cy.request({\n  method: \"GET\",\n  url: `${API()}/products/${PRODUCTS.normal.id}`\n}).then(before => {\n  const stockAvant = before.body.availableStock;\n  cy.request({\n    method: \"PUT\",\n    url: `${API()}/orders/add`,\n    headers: {\n      Authorization: `Bearer ${token}`\n    },\n    body: {\n      product: PRODUCTS.normal.id,\n      quantity: 0\n    },\n    failOnStatusCode: false\n  }).then(res => {\n    if (res.status < 400) {\n      anomalie(\"ANO-CART-04\", \"DEFECT HIGH — Quantité 0 acceptée par l'API\", `Attendu : 400-422 | Observé : ${res.status}`);\n    }\n    cy.request({\n      method: \"GET\",\n      url: `${API()}/products/${PRODUCTS.normal.id}`\n    }).then(after => {\n      if (after.body.availableStock !== stockAvant) {\n        anomalie(\"ANO-CART-04\", \"DEFECT HIGH — Stock altéré malgré quantité 0\", `Attendu : ${stockAvant} | Observé : ${after.body.availableStock}`);\n      }\n      cy.log(`✅ API-4 — Quantité 0 refusée, stock intact (${stockAvant})`);\n    });\n  });\n});",
+              "err": {
+                "message": "Error: ❌ [ANO-CART-04] DEFECT HIGH — Quantité 0 acceptée par l'API | Attendu : 400-422 | Observé : 200",
+                "estack": "Error: ❌ [ANO-CART-04] DEFECT HIGH — Quantité 0 acceptée par l'API | Attendu : 400-422 | Observé : 200\n    at anomalie (webpack:///./E2Ecypress/e2e/apiTests/api-cart.cy.js:19:8)\n    at Context.eval (webpack:///./E2Ecypress/e2e/apiTests/api-cart.cy.js:267:10)\n    at getRet (http://localhost:4200/__cypress/runner/cypress_runner.js:122806:20)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise.attempt.Promise.try (http://localhost:4200/__cypress/runner/cypress_runner.js:4285:29)\n    at Context.thenFn (http://localhost:4200/__cypress/runner/cypress_runner.js:122817:66)\n    at Context.then (http://localhost:4200/__cypress/runner/cypress_runner.js:123068:21)\n    at wrapped (http://localhost:4200/__cypress/runner/cypress_runner.js:146326:19)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:152294:15)",
+                "diff": null
+              },
+              "uuid": "aa8cca94-ed6c-43aa-867a-4bf05e2c4f7e",
+              "parentUUID": "4e9c627e-a1b5-4b64-8fbc-81b626c1d395",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "API-5 - Quantité négative doit être refusée (stock:50)",
+              "fullTitle": "Panier - utilisateur connecté API-5 - Quantité négative doit être refusée (stock:50)",
+              "timedOut": null,
+              "duration": 884,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request({\n  method: \"GET\",\n  url: `${API()}/products/${PRODUCTS.normal.id}`\n}).then(before => {\n  const stockAvant = before.body.availableStock;\n  cy.request({\n    method: \"PUT\",\n    url: `${API()}/orders/add`,\n    headers: {\n      Authorization: `Bearer ${token}`\n    },\n    body: {\n      product: PRODUCTS.normal.id,\n      quantity: -1\n    },\n    failOnStatusCode: false\n  }).then(res => {\n    if (res.status < 400) {\n      anomalie(\"ANO-CART-05\", \"DEFECT CRITICAL — Quantité négative acceptée par l'API\", `Attendu : 400-422 | Observé : ${res.status}`);\n    }\n    cy.request({\n      method: \"GET\",\n      url: `${API()}/products/${PRODUCTS.normal.id}`\n    }).then(after => {\n      if (after.body.availableStock !== stockAvant) {\n        anomalie(\"ANO-CART-05\", \"DEFECT CRITICAL — Stock altéré malgré quantité négative\", `Attendu : ${stockAvant} | Observé : ${after.body.availableStock}`);\n      }\n      cy.log(`✅ API-5 — Quantité -1 refusée, stock intact (${stockAvant})`);\n    });\n  });\n});",
+              "err": {},
+              "uuid": "d1a12a3e-59cf-42d0-8f20-cffb928ac376",
+              "parentUUID": "4e9c627e-a1b5-4b64-8fbc-81b626c1d395",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "API-6 - Quantité supérieure au stock doit être refusée (stock:3, qty:5)",
+              "fullTitle": "Panier - utilisateur connecté API-6 - Quantité supérieure au stock doit être refusée (stock:3, qty:5)",
+              "timedOut": null,
+              "duration": 1328,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "cy.request({\n  method: \"GET\",\n  url: `${API()}/products/${PRODUCTS.faible.id}`\n}).then(before => {\n  const stockAvant = before.body.availableStock;\n  cy.request({\n    method: \"PUT\",\n    url: `${API()}/orders/add`,\n    headers: {\n      Authorization: `Bearer ${token}`\n    },\n    body: {\n      product: PRODUCTS.faible.id,\n      quantity: 5\n    },\n    failOnStatusCode: false\n  }).then(res => {\n    if (res.status < 400) {\n      anomalie(\"ANO-CART-06\", \"DEFECT HIGH — Dépassement de stock accepté par l'API\", `Stock disponible : ${stockAvant} | Quantité demandée : 5 | Statut reçu : ${res.status}`);\n    }\n    cy.request({\n      method: \"GET\",\n      url: `${API()}/products/${PRODUCTS.faible.id}`\n    }).then(after => {\n      if (after.body.availableStock < 0) {\n        anomalie(\"ANO-CART-06\", \"DEFECT CRITICAL — Stock passé en négatif après dépassement\", `Attendu : ≥ 0 | Observé : ${after.body.availableStock}`);\n      }\n      if (after.body.availableStock !== stockAvant) {\n        anomalie(\"ANO-CART-06\", \"DEFECT HIGH — Stock altéré malgré refus de dépassement\", `Attendu : ${stockAvant} | Observé : ${after.body.availableStock}`);\n      }\n      cy.log(`✅ API-6 — Dépassement refusé, stock intact (${after.body.availableStock})`);\n    });\n  });\n});",
+              "err": {
+                "message": "Error: ❌ [ANO-CART-06] DEFECT HIGH — Dépassement de stock accepté par l'API | Stock disponible : -12 | Quantité demandée : 5 | Statut reçu : 200",
+                "estack": "Error: ❌ [ANO-CART-06] DEFECT HIGH — Dépassement de stock accepté par l'API | Stock disponible : -12 | Quantité demandée : 5 | Statut reçu : 200\n    at anomalie (webpack:///./E2Ecypress/e2e/apiTests/api-cart.cy.js:19:8)\n    at Context.eval (webpack:///./E2Ecypress/e2e/apiTests/api-cart.cy.js:345:10)\n    at getRet (http://localhost:4200/__cypress/runner/cypress_runner.js:122806:20)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise.attempt.Promise.try (http://localhost:4200/__cypress/runner/cypress_runner.js:4285:29)\n    at Context.thenFn (http://localhost:4200/__cypress/runner/cypress_runner.js:122817:66)\n    at Context.then (http://localhost:4200/__cypress/runner/cypress_runner.js:123068:21)\n    at wrapped (http://localhost:4200/__cypress/runner/cypress_runner.js:146326:19)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:152294:15)",
+                "diff": null
+              },
+              "uuid": "0c13c001-5cc7-41dc-99d1-ad4954525cbe",
+              "parentUUID": "4e9c627e-a1b5-4b64-8fbc-81b626c1d395",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "API-7 - Stock décrémenté après ajout au panier (stock:50, qty:3)",
+              "fullTitle": "Panier - utilisateur connecté API-7 - Stock décrémenté après ajout au panier (stock:50, qty:3)",
+              "timedOut": null,
+              "duration": 943,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request({\n  method: \"GET\",\n  url: `${API()}/products/${PRODUCTS.normal.id}`\n}).then(productRes => {\n  const stockAvant = productRes.body.availableStock;\n  cy.request({\n    method: \"PUT\",\n    url: `${API()}/orders/add`,\n    headers: {\n      Authorization: `Bearer ${token}`\n    },\n    body: {\n      product: PRODUCTS.normal.id,\n      quantity: 3\n    }\n  }).then(() => {\n    cy.request({\n      method: \"GET\",\n      url: `${API()}/products/${PRODUCTS.normal.id}`\n    }).then(updatedRes => {\n      const stockApres = updatedRes.body.availableStock;\n      if (stockApres !== stockAvant - 3) {\n        anomalie(\"ANO-CART-07\", \"DEFECT HIGH — Stock non décrémenté correctement après ajout\", `Attendu : ${stockAvant - 3} | Observé : ${stockApres}`);\n      }\n      cy.log(`✅ API-7 — Stock : ${stockAvant} → ${stockApres} (−3)`);\n    });\n  });\n});",
+              "err": {},
+              "uuid": "6acec6b0-3008-4ae3-a184-aa590b54708f",
+              "parentUUID": "4e9c627e-a1b5-4b64-8fbc-81b626c1d395",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "API-8 - Quantité > 20 doit être refusée (stock:50, qty:21)",
+              "fullTitle": "Panier - utilisateur connecté API-8 - Quantité > 20 doit être refusée (stock:50, qty:21)",
+              "timedOut": null,
+              "duration": 901,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "cy.request({\n  method: \"GET\",\n  url: `${API()}/products/${PRODUCTS.normal.id}`\n}).then(before => {\n  const stockAvant = before.body.availableStock;\n  cy.request({\n    method: \"PUT\",\n    url: `${API()}/orders/add`,\n    headers: {\n      Authorization: `Bearer ${token}`\n    },\n    body: {\n      product: PRODUCTS.normal.id,\n      quantity: 21\n    },\n    failOnStatusCode: false\n  }).then(res => {\n    if (res.status < 400) {\n      anomalie(\"ANO-CART-08\", \"DEFECT HIGH — Quantité 21 acceptée sans limite par l'API\", `Attendu : 400-422 | Observé : ${res.status}`);\n    }\n    cy.request({\n      method: \"GET\",\n      url: `${API()}/products/${PRODUCTS.normal.id}`\n    }).then(after => {\n      if (after.body.availableStock < 0) {\n        anomalie(\"ANO-CART-08\", \"DEFECT CRITICAL — Stock passé en négatif après qty:21\", `Attendu : ≥ 0 | Observé : ${after.body.availableStock}`);\n      }\n      if (after.body.availableStock !== stockAvant) {\n        anomalie(\"ANO-CART-08\", \"DEFECT HIGH — Stock altéré malgré refus de qty:21\", `Attendu : ${stockAvant} | Observé : ${after.body.availableStock}`);\n      }\n      cy.log(`✅ API-8 — Quantité 21 refusée, stock intact (${after.body.availableStock})`);\n    });\n  });\n});",
+              "err": {
+                "message": "Error: ❌ [ANO-CART-08] DEFECT HIGH — Quantité 21 acceptée sans limite par l'API | Attendu : 400-422 | Observé : 200",
+                "estack": "Error: ❌ [ANO-CART-08] DEFECT HIGH — Quantité 21 acceptée sans limite par l'API | Attendu : 400-422 | Observé : 200\n    at anomalie (webpack:///./E2Ecypress/e2e/apiTests/api-cart.cy.js:19:8)\n    at Context.eval (webpack:///./E2Ecypress/e2e/apiTests/api-cart.cy.js:423:10)\n    at getRet (http://localhost:4200/__cypress/runner/cypress_runner.js:122806:20)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise.attempt.Promise.try (http://localhost:4200/__cypress/runner/cypress_runner.js:4285:29)\n    at Context.thenFn (http://localhost:4200/__cypress/runner/cypress_runner.js:122817:66)\n    at Context.then (http://localhost:4200/__cypress/runner/cypress_runner.js:123068:21)\n    at wrapped (http://localhost:4200/__cypress/runner/cypress_runner.js:146326:19)\n    at <unknown> (http://localhost:4200/__cypress/runner/cypress_runner.js:152294:15)",
+                "diff": null
+              },
+              "uuid": "a2a09bf1-2194-4665-a8e2-2ce167c3f50c",
+              "parentUUID": "4e9c627e-a1b5-4b64-8fbc-81b626c1d395",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "API-11 - Pas de duplication de ligne pour même produit (stock:50)",
+              "fullTitle": "Panier - utilisateur connecté API-11 - Pas de duplication de ligne pour même produit (stock:50)",
+              "timedOut": null,
+              "duration": 1014,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request({\n  method: \"PUT\",\n  url: `${API()}/orders/add`,\n  headers: {\n    Authorization: `Bearer ${token}`\n  },\n  body: {\n    product: PRODUCTS.normal.id,\n    quantity: 1\n  }\n}).then(() => {\n  cy.request({\n    method: \"PUT\",\n    url: `${API()}/orders/add`,\n    headers: {\n      Authorization: `Bearer ${token}`\n    },\n    body: {\n      product: PRODUCTS.normal.id,\n      quantity: 2\n    }\n  }).then(() => {\n    cy.request({\n      method: \"GET\",\n      url: `${API()}/orders`,\n      headers: {\n        Authorization: `Bearer ${token}`\n      }\n    }).then(cartRes => {\n      var _cartRes$body3;\n      const lines = (Array.isArray(cartRes.body) ? cartRes.body : ((_cartRes$body3 = cartRes.body) === null || _cartRes$body3 === void 0 ? void 0 : _cartRes$body3.orderLines) || []).filter(l => {\n        var _l$product3;\n        return ((_l$product3 = l.product) === null || _l$product3 === void 0 ? void 0 : _l$product3.id) === PRODUCTS.normal.id;\n      });\n      if (lines.length !== 1) {\n        anomalie(\"ANO-CART-11\", \"DEFECT HIGH — Duplication de ligne détectée pour le même produit\", `Attendu : 1 ligne | Observé : ${lines.length} ligne(s)`);\n      }\n      if (lines[0].quantity !== 3) {\n        anomalie(\"ANO-CART-11\", \"DEFECT MEDIUM — Quantité cumulée incorrecte\", `Attendu : 3 | Observé : ${lines[0].quantity}`);\n      }\n      cy.log(`✅ API-11 — Pas de duplication, quantité cumulée : ${lines[0].quantity}`);\n    });\n  });\n});",
+              "err": {},
+              "uuid": "890247ab-9d0d-4aea-862d-12200399273e",
+              "parentUUID": "4e9c627e-a1b5-4b64-8fbc-81b626c1d395",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "fcd6bcc1-1f5f-42fd-be1d-f5b70b2277b4",
+            "05a55cd4-3fac-49bd-9858-283b1e22b0d8",
+            "a1021887-a4d8-404f-9111-9ac862626b2c",
+            "8f20f1b6-44fe-49ca-abce-4237f1930a84",
+            "d1a12a3e-59cf-42d0-8f20-cffb928ac376",
+            "6acec6b0-3008-4ae3-a184-aa590b54708f",
+            "890247ab-9d0d-4aea-862d-12200399273e"
+          ],
+          "failures": [
+            "aa8cca94-ed6c-43aa-867a-4bf05e2c4f7e",
+            "0c13c001-5cc7-41dc-99d1-ad4954525cbe",
+            "a2a09bf1-2194-4665-a8e2-2ce167c3f50c"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 9684,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "E2Ecypress/reports",
+        "overwrite": false,
+        "json": true,
+        "html": false
+      },
+      "version": "6.3.2"
+    }
+  }
+}

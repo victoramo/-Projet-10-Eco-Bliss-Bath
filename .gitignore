@@ -1,2 +1,21 @@
+# ─── Base de données ───────────────────────────────
 mysql/
 *.sql
+*.sqlite
+*.db
+
+# ─── Dépendances Node ──────────────────────────────
+node_modules/
+
+# ─── Build Angular ─────────────────────────────────
+dist/
+.angular/
+
+# ─── Cypress - générés automatiquement ────────────
+cypress/screenshots/
+cypress/videos/
+cypress/logs/
+# ─── Fichiers sensibles ────────────────────────────
+.env
+.env.local
+cypress.env.json
