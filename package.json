@@ -7,12 +7,12 @@
     "mochawesome-report-generator": "^6.3.2"
   },
   "scripts": {
-    "test:all": "cypress run",
     "test:api": "cypress run --spec \"E2Ecypress/e2e/apiTests/**\"",
     "test:smoke": "cypress run --spec \"E2Ecypress/e2e/smokeTests/**\"",
     "test:ui": "cypress run --spec \"E2Ecypress/e2e/uiTests/**\"",
-    "test:merge": "mochawesome-merge E2Ecypress/reports/*.json > E2Ecypress/reports/report_final.json",
-    "test:report": "marge E2Ecypress/reports/report_final.json --reportDir E2Ecypress/reports --inline",
-    "test:full": "npm run test:all && npm run test:merge && npm run test:report"
+    "test:clean": "node -e \"const fs=require('fs');const dir='E2Ecypress/reports';fs.readdirSync(dir).filter(f=>f.endsWith('.json')||f.endsWith('.html')).forEach(f=>fs.unlinkSync(dir+'/'+f));console.log('✅ Rapports nettoyés');\"",
+    "test:merge": "mochawesome-merge E2Ecypress/reports/mochawesome*.json > E2Ecypress/reports/report_final.json",
+    "test:genreport": "node -e \"const d=new Date();const ts=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'_'+String(d.getHours()).padStart(2,'0')+'h'+String(d.getMinutes()).padStart(2,'0');require('child_process').execSync('npx marge E2Ecypress/reports/report_final.json --reportDir E2Ecypress/reports --reportFilename campagne_'+ts+' --inline',{stdio:'inherit'});\"",
+    "test:full": "npm run test:clean && npm run test:api && npm run test:smoke && npm run test:ui && npm run test:merge && npm run test:genreport"
   }
 }

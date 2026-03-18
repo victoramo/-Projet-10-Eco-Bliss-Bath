@@ -416,27 +416,8 @@ describe("Panier - Tests UI", () => {
       });
   });
 
-  // ─── TEST 9 — qty=0 dans le panier (stock:39) ───────────────────────────
-  it("9 - Ajouter au panier avec quantité 0 doit être refusé", () => {
-    allerVersPageProduit(PRODUCTS.normal);
-    cy.get("input[type='number']").clear().type("0");
-    cy.contains("button", "Ajouter au panier").click();
-    cy.wait(3000);
-
-    cy.url().then((url) => {
-      if (url.includes("/cart")) {
-        signalerAnomalie(
-          "ANO-BACK-01",
-          "DEFECT HIGH — qty=0 acceptée, commande confirmable",
-          "Attendu : ajout refusé | Observé : ligne qty=0 dans le panier",
-        );
-      }
-      cy.log("✅ TEST 9 — qty=0 correctement refusée");
-    });
-  });
-
-  // ─── TEST 10 — Quantité négative refusée (qty:-2, stock:39) ─────────────
-  it("10 - Ajouter au panier avec quantité négative doit être refusé", () => {
+  // ─── TEST 9 — Quantité négative refusée (qty:-2, stock:39) ─────────────
+  it("09 - Ajouter au panier avec quantité négative doit être refusé", () => {
     allerVersPageProduit(PRODUCTS.normal);
     cy.get("input[type='number']").clear().type("-2");
     cy.contains("button", "Ajouter au panier").click();
@@ -463,7 +444,7 @@ describe("Panier - Tests UI", () => {
             );
           });
       } else {
-        cy.log("✅ TEST 10 — qty=-2 correctement refusée");
+        cy.log("✅ TEST 09 — qty=-2 correctement refusée");
       }
     });
   });

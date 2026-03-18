@@ -13,7 +13,7 @@ module.exports = defineConfig({
 
   e2e: {
     setupNodeEvents(on, config) {},
-    baseUrl: "http://localhost:4200",
+    baseUrl: "http://localhost:4200/",
 
     specPattern: "E2Ecypress/e2e/**/*.cy.js",
     supportFile: "E2Ecypress/support/e2e.js",
@@ -31,7 +31,6 @@ module.exports = defineConfig({
     video: true,
     videoCompression: 32,
 
-    allowCypressEnv: true,
     experimentalMemoryManagement: true,
   },
 

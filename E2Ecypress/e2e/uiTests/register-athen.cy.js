@@ -7,6 +7,7 @@ describe("Authentification - Inscription et Connexion", () => {
   const email = `${lastname}@example.com`;
   const password = "testtest";
 
+  // ─── Setup : visite la page d'accueil + intercepte les alertes navigateur ───
   beforeEach(() => {
     cy.visit("/");
     cy.window().then((win) => {
@@ -14,7 +15,7 @@ describe("Authentification - Inscription et Connexion", () => {
     });
   });
 
-  // Log l'alerte navigateur si elle a été déclenchée
+  // ─── Helper : log l'alerte navigateur si déclenchée ───
   const logAlerte = () => {
     cy.get("@alertStub").then((stub) => {
       if (stub.called) {
@@ -25,7 +26,7 @@ describe("Authentification - Inscription et Connexion", () => {
     });
   };
 
-  // Logue et fait échouer le test avec le code anomalie et le détail
+  // ─── Helper : logue et fait échouer le test avec code anomalie ───
   const signalerAnomalie = (code, message, details = "") => {
     cy.log(`🚨 [${code}] ANOMALIE DÉTECTÉE`);
     cy.log(`📋 ${message}`);
@@ -33,8 +34,9 @@ describe("Authentification - Inscription et Connexion", () => {
     throw new Error(`❌ [${code}] ${message}${details ? " | " + details : ""}`);
   };
 
-  // TEST 1 — Vérifie qu'un nouvel utilisateur peut s'inscrire et se déconnecter
-  // TEST 1 — Vérifie qu'un nouvel utilisateur peut s'inscrire et se déconnecter
+  // ─────────────────────────────────────────────
+  // TEST 1 — Inscription d'un nouvel utilisateur + déconnexion
+  // ─────────────────────────────────────────────
   it("1 - Créer un compte utilisateur avec succès", () => {
     cy.contains("a", "Inscription").click();
     cy.url().should("include", "/register");
@@ -52,7 +54,6 @@ describe("Authentification - Inscription et Connexion", () => {
       cy.log(`📡 Status inscription : ${interception.response.statusCode}`);
     });
 
-    // ✅ should() attend automatiquement — pas besoin de .then()
     cy.url({ timeout: 15000 })
       .should("not.include", "/register")
       .then((url) => {
@@ -66,7 +67,9 @@ describe("Authentification - Inscription et Connexion", () => {
     cy.url().should("include", "/");
   });
 
-  // TEST 2 — Vérifie que l'inscription est bloquée si l'email est déjà enregistré
+  // ─────────────────────────────────────────────
+  // TEST 2 — Inscription bloquée si email déjà utilisé
+  // ─────────────────────────────────────────────
   it("2 - Affiche une erreur si l'adresse mail est déjà utilisée", () => {
     cy.contains("a", "Inscription").click();
     cy.url().should("include", "/register");
@@ -96,22 +99,24 @@ describe("Authentification - Inscription et Connexion", () => {
     });
   });
 
-  // TEST 3 — Vérifie qu'un utilisateur existant peut se connecter
+  // ─────────────────────────────────────────────
+  // TEST 3 — Connexion réussie avec un compte existant
+  // ─────────────────────────────────────────────
   it("3 - Connexion avec un compte existant", () => {
     cy.contains("a", "Accueil").click();
     cy.contains("a", "Connexion").click();
     cy.url().should("include", "/login");
-
     cy.get("#username").type("ramoshippuden@gmail.com");
     cy.get("#password").type("testtest");
     cy.contains("span", "Se connecter").click();
-
     logAlerte();
-
     cy.url().should("not.include", "/login");
     cy.contains("a", "Déconnexion").should("be.visible");
   });
-  // TEST 4 — Vérifie que la connexion est bloquée si le format de l'email est invalide
+
+  // ─────────────────────────────────────────────
+  // TEST 4 — Connexion bloquée si format email invalide
+  // ─────────────────────────────────────────────
   it("4 - Connexion échoue avec email au mauvais format", () => {
     cy.contains("a", "Connexion").click();
     cy.get("#username").type("emailinvalide");
@@ -130,7 +135,9 @@ describe("Authentification - Inscription et Connexion", () => {
     });
   });
 
-  // TEST 5 — Vérifie que la connexion est bloquée si l'email n'existe pas en base
+  // ─────────────────────────────────────────────
+  // TEST 5 — Connexion bloquée si email inexistant en base
+  // ─────────────────────────────────────────────
   it("5 - Connexion échoue avec email inexistant", () => {
     cy.contains("a", "Connexion").click();
     cy.get("#username").type("inexistant@example.com");
@@ -149,7 +156,9 @@ describe("Authentification - Inscription et Connexion", () => {
     });
   });
 
-  // TEST 6 — Vérifie que le champ email vide déclenche une erreur et met le label en rouge
+  // ─────────────────────────────────────────────
+  // TEST 6 — Connexion bloquée si email vide + label rouge
+  // ─────────────────────────────────────────────
   it("6 - Connexion échoue avec email vide", () => {
     cy.contains("a", "Connexion").click();
     cy.get("#password").type("testtest");
@@ -188,7 +197,9 @@ describe("Authentification - Inscription et Connexion", () => {
       });
   });
 
-  // TEST 7 — Vérifie que la connexion est bloquée si le mot de passe est incorrect
+  // ─────────────────────────────────────────────
+  // TEST 7 — Connexion bloquée si mot de passe incorrect
+  // ─────────────────────────────────────────────
   it("7 - Connexion échoue avec mot de passe erroné", () => {
     cy.contains("a", "Connexion").click();
     cy.get("#username").type("ramoshippuden@gmail.com");
@@ -204,6 +215,47 @@ describe("Authentification - Inscription et Connexion", () => {
         );
       }
       cy.log(`✅ TEST 7 — Erreur mot de passe erroné affichée : ${$el.text()}`);
+    });
+  });
+
+  // ─────────────────────────────────────────────
+  // TEST 8 — Injection XSS dans le formulaire de connexion (cas NON passant)
+  // ─────────────────────────────────────────────
+  it("8 - Tentative d'injection XSS dans le formulaire de connexion", () => {
+    const xssPayload = `<script>alert("XSS")</script>`;
+
+    cy.contains("a", "Connexion").click();
+    cy.get("#username").type(xssPayload);
+    cy.get("#password").type(xssPayload);
+    cy.contains("span", "Se connecter").click();
+    logAlerte();
+
+    // Vérification 1 : on reste sur la page login (pas de redirection non autorisée)
+    cy.url().should("include", "/login");
+
+    // Vérification 2 : le payload XSS ne s'exécute pas dans le DOM
+    cy.document().then((doc) => {
+      const body = doc.body.innerHTML;
+      if (body.includes("<​script>")) {
+        signalerAnomalie(
+          "ANO-AUTH-08",
+          "DEFECT CRITICAL — Faille XSS détectée dans le formulaire de connexion",
+          "Attendu : payload XSS échappé ou refusé | Observé : balise <script> présente dans le DOM",
+        );
+      }
+      cy.log("✅ TEST 8 — Payload XSS non exécuté dans le DOM");
+    });
+
+    // Vérification 3 : un message d'erreur s'affiche (champ invalide ou refus)
+    cy.get("p.error", { timeout: 8000 }).then(($el) => {
+      if (!$el.is(":visible")) {
+        signalerAnomalie(
+          "ANO-AUTH-08B",
+          "DEFECT MEDIUM — Aucun message d'erreur affiché après injection XSS",
+          "Attendu : p.error visible | Observé : élément absent ou masqué",
+        );
+      }
+      cy.log(`✅ TEST 8 — Message d'erreur affiché : ${$el.text()}`);
     });
   });
 });

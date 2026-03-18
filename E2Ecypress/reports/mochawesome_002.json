@@ -1,23 +1,180 @@
 {
   "stats": {
-    "suites": 0,
-    "tests": 0,
-    "passes": 0,
+    "suites": 1,
+    "tests": 6,
+    "passes": 5,
     "pending": 0,
-    "failures": 0,
-    "start": "2026-03-17T16:57:32.029Z",
-    "end": "2026-03-17T16:57:32.029Z",
-    "duration": 0,
-    "testsRegistered": 0,
-    "passPercent": null,
-    "pendingPercent": null,
+    "failures": 1,
+    "start": "2026-03-18T18:31:19.377Z",
+    "end": "2026-03-18T18:31:26.493Z",
+    "duration": 7116,
+    "testsRegistered": 6,
+    "passPercent": 83.33333333333334,
+    "pendingPercent": 0,
     "other": 0,
     "hasOther": false,
     "skipped": 0,
     "hasSkipped": false
   },
   "results": [
-    false
+    {
+      "uuid": "a8455424-299c-49a7-8d91-e434211ffcf9",
+      "title": "",
+      "fullFile": "E2Ecypress\\e2e\\apiTests\\api-reviews.cy.js",
+      "file": "E2Ecypress\\e2e\\apiTests\\api-reviews.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "296f1895-9526-46af-80bf-b79fb2b3c537",
+          "title": "API - Tests sur les avis (Reviews)",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "1 - GET /reviews - retourne la liste des avis",
+              "fullTitle": "API - Tests sur les avis (Reviews) 1 - GET /reviews - retourne la liste des avis",
+              "timedOut": null,
+              "duration": 931,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request({\n  method: \"GET\",\n  url: `${Cypress.env(\"apiUrl\")}/reviews`\n}).then(response => {\n  expect(response.status).to.eq(200);\n  expect(response.body).to.be.an(\"array\");\n  expect(response.body.length).to.be.greaterThan(0);\n});",
+              "err": {},
+              "uuid": "af7e0f79-e4e1-4af0-91db-5dfafb3222c3",
+              "parentUUID": "296f1895-9526-46af-80bf-b79fb2b3c537",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "2 - POST /reviews - avis satisfait 5 étoiles accepté",
+              "fullTitle": "API - Tests sur les avis (Reviews) 2 - POST /reviews - avis satisfait 5 étoiles accepté",
+              "timedOut": null,
+              "duration": 738,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiReviews.addReview)(authToken, \"savon doux\", \"Texture incroyable, parfum délicieux, et aucune réaction malgré ma peau sensible. J'en suis vraiment ravie.\", 5).then(response => {\n  expect(response.status).to.eq(200);\n  expect(response.body).to.have.property(\"title\", \"savon doux\");\n  expect(response.body).to.have.property(\"rating\", 5);\n});",
+              "err": {},
+              "uuid": "059eafca-d321-4f11-b1df-e096eca254d6",
+              "parentUUID": "296f1895-9526-46af-80bf-b79fb2b3c537",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "3 - POST /reviews - avis médiocre 2 étoiles accepté",
+              "fullTitle": "API - Tests sur les avis (Reviews) 3 - POST /reviews - avis médiocre 2 étoiles accepté",
+              "timedOut": null,
+              "duration": 688,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiReviews.addReview)(authToken, \"Déçu\", \"qualite prix au dessus du marche\", 2).then(response => {\n  expect(response.status).to.eq(200);\n  expect(response.body).to.have.property(\"rating\", 2);\n});",
+              "err": {},
+              "uuid": "986591bd-e049-47cd-8519-0c96eecfa6ad",
+              "parentUUID": "296f1895-9526-46af-80bf-b79fb2b3c537",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "4 - POST /reviews - commentaire violent doit être refusé",
+              "fullTitle": "API - Tests sur les avis (Reviews) 4 - POST /reviews - commentaire violent doit être refusé",
+              "timedOut": null,
+              "duration": 784,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiReviews.addReview)(authToken, \"arnaque\", \"Commande non livrée, service nul, je vous emmerde, arnaque totale !\", 0).then(response => {\n  expect(response.status).to.eq(400);\n  expect(response.body).to.have.property(\"error\");\n});",
+              "err": {},
+              "uuid": "69e5b59b-18ff-4197-ac05-877bfab726ed",
+              "parentUUID": "296f1895-9526-46af-80bf-b79fb2b3c537",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "5 - POST /reviews - commentaire vide est refusé",
+              "fullTitle": "API - Tests sur les avis (Reviews) 5 - POST /reviews - commentaire vide est refusé",
+              "timedOut": null,
+              "duration": 794,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "(0, _apiReviews.addReview)(authToken, \"chouette\", \"\", 2).then(response => {\n  expect(response.status).to.eq(400);\n  expect(response.body).to.have.property(\"error\");\n});",
+              "err": {},
+              "uuid": "91c06209-839a-4d43-955f-edaf6716b7b7",
+              "parentUUID": "296f1895-9526-46af-80bf-b79fb2b3c537",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "6 - POST /reviews - faille XSS doit être bloquée",
+              "fullTitle": "API - Tests sur les avis (Reviews) 6 - POST /reviews - faille XSS doit être bloquée",
+              "timedOut": null,
+              "duration": 873,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "const testXSS = `<script>alert(\"XSS\");</script>`;\n(0, _apiReviews.addReview)(authToken, \"test XSS\", testXSS, 5).then(response => {\n  expect(response.status).to.eq(400);\n  expect(response.body).to.have.property(\"error\");\n});",
+              "err": {
+                "message": "AssertionError: expected 200 to equal 400",
+                "estack": "AssertionError: expected 200 to equal 400\n    at Context.eval (webpack:///./E2Ecypress/e2e/apiTests/api-reviews.cy.js:88:33)\n    at getRet (http://localhost:4200/__cypress/runner/cypress_runner.js:122806:20)\n    at tryCatcher (http://localhost:4200/__cypress/runner/cypress_runner.js:1777:23)\n    at Promise.attempt.Promise.try (http://localhost:4200/__cypress/runner/cypress_runner.js:4285:29)\n    at Context.thenFn (http://localhost:4200/__cypress/runner/cypress_runner.js:122817:66)\n    at Context.then (http://localhost:4200/__cypress/runner/cypress_runner.js:123068:21)",
+                "diff": "- 200\n+ 400\n"
+              },
+              "uuid": "9d9bf3f0-a661-46c8-865c-ea32253f4dd8",
+              "parentUUID": "296f1895-9526-46af-80bf-b79fb2b3c537",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "af7e0f79-e4e1-4af0-91db-5dfafb3222c3",
+            "059eafca-d321-4f11-b1df-e096eca254d6",
+            "986591bd-e049-47cd-8519-0c96eecfa6ad",
+            "69e5b59b-18ff-4197-ac05-877bfab726ed",
+            "91c06209-839a-4d43-955f-edaf6716b7b7"
+          ],
+          "failures": [
+            "9d9bf3f0-a661-46c8-865c-ea32253f4dd8"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 4808,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
   ],
   "meta": {
     "mocha": {
@@ -27,7 +184,7 @@
       "options": {
         "quiet": false,
         "reportFilename": "mochawesome",
-        "saveHtml": true,
+        "saveHtml": false,
         "saveJson": true,
         "consoleReporter": "spec",
         "useInlineDiffs": false,
@@ -39,8 +196,8 @@
       "options": {
         "reportDir": "E2Ecypress/reports",
         "overwrite": false,
-        "html": true,
-        "json": true
+        "json": true,
+        "html": false
       },
       "version": "6.3.2"
     }

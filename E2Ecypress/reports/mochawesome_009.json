@@ -1,23 +1,107 @@
 {
   "stats": {
-    "suites": 0,
-    "tests": 0,
+    "suites": 1,
+    "tests": 2,
     "passes": 0,
     "pending": 0,
-    "failures": 0,
-    "start": "2026-03-17T17:03:36.827Z",
-    "end": "2026-03-17T17:03:36.827Z",
-    "duration": 0,
-    "testsRegistered": 0,
-    "passPercent": null,
-    "pendingPercent": null,
+    "failures": 2,
+    "start": "2026-03-18T18:58:48.610Z",
+    "end": "2026-03-18T18:59:54.121Z",
+    "duration": 65511,
+    "testsRegistered": 2,
+    "passPercent": 0,
+    "pendingPercent": 0,
     "other": 0,
     "hasOther": false,
     "skipped": 0,
     "hasSkipped": false
   },
   "results": [
-    false
+    {
+      "uuid": "fd87d507-08b4-4bed-88f5-be746068ba56",
+      "title": "",
+      "fullFile": "E2Ecypress\\e2e\\smokeTests\\loginsmok.cy.js",
+      "file": "E2Ecypress\\e2e\\smokeTests\\loginsmok.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "5a03c64a-99ec-49fd-8a00-369804ca4ad7",
+          "title": "Page de connexion",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Présence des champs de saisie et du bouton de connexion",
+              "fullTitle": "Page de connexion Présence des champs de saisie et du bouton de connexion",
+              "timedOut": null,
+              "duration": 10727,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit(\"#/login\");\ncy.getBySel(\"login-input-username\").should(\"be.visible\");\ncy.getBySel(\"login-input-password\").should(\"be.visible\");\ncy.getBySel(\"login-submit\").should(\"be.visible\");",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=login-input-username]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=login-input-username]`, but never found it.\n    at Context.eval (webpack:///./E2Ecypress/e2e/smokeTests/loginsmok.cy.js:7:40)",
+                "diff": null
+              },
+              "uuid": "03709c46-4247-4e87-a15d-6ad86297a445",
+              "parentUUID": "5a03c64a-99ec-49fd-8a00-369804ca4ad7",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "2 - Résistance à l'injection SQL dans le formulaire de connexion",
+              "fullTitle": "Page de connexion 2 - Résistance à l'injection SQL dans le formulaire de connexion",
+              "timedOut": null,
+              "duration": 10777,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit(\"/#/login\");\ncy.getBySel(\"login-input-username\").type(\"' OR 1=1#\");\ncy.getBySel(\"login-input-password\").type(\"' OR 1=1#\");\ncy.getBySel(\"login-submit\").click();\n// L'application ne doit PAS connecter l'utilisateur\ncy.getBySel(\"login-errors\").should(\"be.visible\");\ncy.url().should(\"include\", \"/login\"); // on reste sur la page login",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=login-input-username]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=login-input-username]`, but never found it.\n    at Context.eval (webpack:///./E2Ecypress/support/commands.js:13:12)\n    at wrapped (http://localhost:4200/__cypress/runner/cypress_runner.js:146318:43)",
+                "diff": null
+              },
+              "uuid": "c30969bd-695b-43a5-8a49-453c2c51606f",
+              "parentUUID": "5a03c64a-99ec-49fd-8a00-369804ca4ad7",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [
+            "03709c46-4247-4e87-a15d-6ad86297a445",
+            "c30969bd-695b-43a5-8a49-453c2c51606f"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 21504,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
   ],
   "meta": {
     "mocha": {
@@ -27,7 +111,7 @@
       "options": {
         "quiet": false,
         "reportFilename": "mochawesome",
-        "saveHtml": true,
+        "saveHtml": false,
         "saveJson": true,
         "consoleReporter": "spec",
         "useInlineDiffs": false,
@@ -39,8 +123,8 @@
       "options": {
         "reportDir": "E2Ecypress/reports",
         "overwrite": false,
-        "html": true,
-        "json": true
+        "json": true,
+        "html": false
       },
       "version": "6.3.2"
     }

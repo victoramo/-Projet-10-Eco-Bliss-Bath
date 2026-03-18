@@ -6,6 +6,9 @@ mysql/
 
 # ─── Dépendances Node ──────────────────────────────
 node_modules/
+E2Ecypress/reports/
+E2Ecypress/videos/
+E2Ecypress/screenshots/
 
 # ─── Build Angular ─────────────────────────────────
 dist/
