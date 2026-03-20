@@ -20,6 +20,8 @@ module.exports = defineConfig({
     fixturesFolder: "E2Ecypress/fixtures",
     screenshotsFolder: "E2Ecypress/screenshots",
     videosFolder: "E2Ecypress/videos",
+    viewportWidth: 1280,
+    viewportHeight: 720,
 
     defaultCommandTimeout: 10000,
     pageLoadTimeout: 60000,
@@ -30,6 +32,7 @@ module.exports = defineConfig({
     screenshotOnRunFailure: true,
     video: true,
     videoCompression: 32,
+    trashAssetsBeforeRuns: true,
 
     experimentalMemoryManagement: true,
   },
