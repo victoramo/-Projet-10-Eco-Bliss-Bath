@@ -5,9 +5,9 @@
     "passes": 1,
     "pending": 0,
     "failures": 0,
-    "start": "2026-03-19T18:41:59.996Z",
-    "end": "2026-03-19T18:42:01.586Z",
-    "duration": 1590,
+    "start": "2026-03-25T02:47:54.495Z",
+    "end": "2026-03-25T02:47:56.885Z",
+    "duration": 2390,
     "testsRegistered": 1,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "01ebd7ed-4390-454e-9025-18e1faea3578",
+      "uuid": "52b4d6af-cc87-44b3-9737-411c8a67396e",
       "title": "",
       "fullFile": "E2Ecypress\\e2e\\apiTests\\api-xss-auth.cy.js",
       "file": "E2Ecypress\\e2e\\apiTests\\api-xss-auth.cy.js",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "c96327e0-f676-499f-a4eb-eefee139a4fe",
+          "uuid": "777f37fe-7e6d-4c50-bbb1-b24aee2f754c",
           "title": "XSS API - Injection formulaire authentification",
           "fullFile": "",
           "file": "",
@@ -38,7 +38,7 @@
               "title": "Vérifie que les 15 payloads XSS sont bloqués par l'API",
               "fullTitle": "XSS API - Injection formulaire authentification Vérifie que les 15 payloads XSS sont bloqués par l'API",
               "timedOut": null,
-              "duration": 1530,
+              "duration": 2343,
               "state": "passed",
               "speed": "fast",
               "pass": true,
@@ -47,20 +47,20 @@
               "context": null,
               "code": "// On boucle dans un seul it() pour éviter le problème de this dans forEach\nthis.xssPayloads.forEach(item => {\n  cy.request({\n    method: \"POST\",\n    url: `${apiUrl}/login`,\n    headers: {\n      \"Content-Type\": \"application/json\"\n    },\n    body: {\n      username: item.payload,\n      password: item.payload\n    },\n    failOnStatusCode: false\n  }).then(res => {\n    // ── Le payload XSS ne doit jamais authentifier ────────────────\n    expect(res.status, `${item.id} - statut doit être 401`).to.eq(401);\n    // ── La réponse ne doit pas refléter le payload brut ───────────\n    const body = JSON.stringify(res.body);\n    XSS_PATTERNS.forEach(pattern => {\n      expect(body, `${item.id} - réponse ne doit pas contenir \"${pattern}\"`).to.not.include(pattern);\n    });\n    cy.log(`✅ ${item.id} (${item.description}) bloqué — HTTP ${res.status}`);\n  });\n});",
               "err": {},
-              "uuid": "78cc37af-0016-4da5-9d36-16ded774a476",
-              "parentUUID": "c96327e0-f676-499f-a4eb-eefee139a4fe",
+              "uuid": "50310c39-a39e-4a0d-a2a8-0169d19e85f8",
+              "parentUUID": "777f37fe-7e6d-4c50-bbb1-b24aee2f754c",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "78cc37af-0016-4da5-9d36-16ded774a476"
+            "50310c39-a39e-4a0d-a2a8-0169d19e85f8"
           ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 1530,
+          "duration": 2343,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000
