@@ -249,59 +249,7 @@ npm run report:open
 
 ---
 
-## 9. Résultats de la campagne
-
-### Résultats globaux
-
-| Indicateur        |      Valeur |
-| ----------------- | ----------: |
-| Tests exécutés    |      **53** |
-| Tests réussis     |      **45** |
-| Tests échoués     |       **8** |
-| Taux de réussite  |  **84,9 %** |
-| Durée d’exécution | **181,9 s** |
-| Suites            |      **10** |
-
-### Lecture QA
-
-La campagne confirme que les parcours nominaux principaux sont globalement exécutables, mais met en évidence plusieurs anomalies bloquantes sur le **panier** et la **sécurité des avis**.
-
-### Statut qualité
-
-> **Décision QA : NO GO**  
-> Une mise en production n’est pas recommandée tant que les anomalies critiques P0/P1 ne sont pas corrigées, notamment la faille XSS sur `/reviews` et les défauts de validation métier sur le panier.
-
----
-
-## 10. Anomalies majeures détectées
-
-| ID                  | Description                                             | Gravité  | Impact principal                              |
-| ------------------- | ------------------------------------------------------- | -------- | --------------------------------------------- |
-| **ANO-REVIEW-XSS**  | Payload XSS accepté par `POST /reviews`                 | Critique | Risque de sécurité pour les utilisateurs      |
-| **ANO-CART-06**     | Dépassement de stock accepté, stock observé à `-12`     | Critique | Survente et perte financière potentielle      |
-| **ANO-CART-04**     | Quantité `0` acceptée par l’API                         | Haute    | Incohérence de données de commande            |
-| **ANO-CART-08**     | Quantité `> 20` acceptée sans blocage                   | Haute    | Règle métier contournée                       |
-| **ANO-BACK-03**     | Bouton “Ajouter au panier” actif sur produit en rupture | Haute    | UX trompeuse et commande impossible à honorer |
-| **ANO-SMOKE-LOGIN** | Sélecteur `data-cy` absent sur la page login            | Moyenne  | Smoke tests partiellement bloqués             |
-
-### Points positifs observés
-
-- L’**API d’authentification** est stable sur les cas principaux.
-- Le scénario **authentification UI** est robuste.
-- Les opérations nominales du panier fonctionnent partiellement.
-- La campagne permet de distinguer clairement les anomalies **front-end** et **back-end**.
-
-### Priorités de correction
-
-1. Corriger la **sanitisation / validation** sur `POST /reviews`.
-2. Bloquer côté back-end les quantités invalides : `0`, `> stock`, `> 20`.
-3. Empêcher le passage du stock en négatif.
-4. Désactiver le bouton d’ajout pour les produits en rupture.
-5. Stabiliser les sélecteurs `data-cy` pour fiabiliser les smoke tests.
-
----
-
-## 11. Documents du projet
+## 09. Documents du projet
 
 Le dépôt peut inclure les livrables suivants :
 
@@ -312,7 +260,7 @@ Le dépôt peut inclure les livrables suivants :
 
 ---
 
-## 12. Auteur
+## 10. Auteur
 
 **Aomar Boukersi**  
 QA Engineer — orientation automatisation  
