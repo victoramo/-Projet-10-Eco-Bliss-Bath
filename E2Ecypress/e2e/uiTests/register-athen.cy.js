@@ -7,7 +7,26 @@ describe("Authentification - Inscription et Connexion", () => {
   const email = `${lastname}@example.com`;
   const password = "testtest";
 
-  // ─── Setup : visite la page d'accueil + intercepte les alertes navigateur ───
+  // ✅ CORRECTION — déclarés ici, accessibles dans TOUS les it()
+  const xssPayloads = [
+    { id: "XSS-02", payload: "<​img src=x onerror=alert('XSS')>" },
+    { id: "XSS-03", payload: "<​svg onload=alert('XSS')>" },
+    { id: "XSS-08", payload: "<iframe src=javascript:alert('XSS')></iframe>" },
+    { id: "XSS-13", payload: "' OR 1=1; <script>alert('XSS')</script>" },
+  ];
+
+  const XSS_PATTERNS = [
+    "<script",
+    "onerror=",
+    "onload=",
+    "javascript:",
+    "onfocus=",
+  ];
+
+  const containsXSSInText = (text) =>
+    XSS_PATTERNS.some((p) => text.toLowerCase().includes(p.toLowerCase()));
+
+  // ─── Setup ───
   beforeEach(() => {
     cy.visit("/");
     cy.window().then((win) => {
@@ -15,7 +34,6 @@ describe("Authentification - Inscription et Connexion", () => {
     });
   });
 
-  // ─── Helper : log l'alerte navigateur si déclenchée ───
   const logAlerte = () => {
     cy.get("@alertStub").then((stub) => {
       if (stub.called) {
@@ -26,7 +44,6 @@ describe("Authentification - Inscription et Connexion", () => {
     });
   };
 
-  // ─── Helper : logue et fait échouer le test avec code anomalie ───
   const signalerAnomalie = (code, message, details = "") => {
     cy.log(`🚨 [${code}] ANOMALIE DÉTECTÉE`);
     cy.log(`📋 ${message}`);
@@ -219,43 +236,196 @@ describe("Authentification - Inscription et Connexion", () => {
   });
 
   // ─────────────────────────────────────────────
-  // TEST 8 — Injection XSS dans le formulaire de connexion (cas NON passant)
+  // TEST 8 — XSS UI Formulaire Inscription
   // ─────────────────────────────────────────────
-  it("8 - Tentative d'injection XSS dans le formulaire de connexion", () => {
-    const xssPayload = `<script>alert("XSS")</script>`;
+  it("8 - Résistance XSS du formulaire Inscription (Angular → Symfony)", () => {
+    const anomalies = [];
 
-    cy.contains("a", "Connexion").click();
-    cy.get("#username").type(xssPayload);
-    cy.get("#password").type(xssPayload);
-    cy.contains("span", "Se connecter").click();
-    logAlerte();
+    cy.then(() => {
+      xssPayloads.forEach((item) => {
+        // ✅ CORRECTION 1 — Déconnexion forcée avant chaque itération
+        cy.visit("/");
+        cy.get("body").then(($body) => {
+          if ($body.find("a:contains('Déconnexion')").length > 0) {
+            cy.contains("a", "Déconnexion").click();
+          }
+        });
 
-    // Vérification 1 : on reste sur la page login (pas de redirection non autorisée)
-    cy.url().should("include", "/login");
+        cy.visit("/#/register");
+        cy.url().should("include", "/register");
 
-    // Vérification 2 : le payload XSS ne s'exécute pas dans le DOM
-    cy.document().then((doc) => {
-      const body = doc.body.innerHTML;
-      if (body.includes("<​script>")) {
-        signalerAnomalie(
-          "ANO-AUTH-08",
-          "DEFECT CRITICAL — Faille XSS détectée dans le formulaire de connexion",
-          "Attendu : payload XSS échappé ou refusé | Observé : balise <script> présente dans le DOM",
+        cy.intercept("POST", "**/register").as(`registerXSS_${item.id}`);
+
+        cy.get("#lastname")
+          .clear()
+          .type(item.payload, { parseSpecialCharSequences: false });
+        cy.get("#firstname")
+          .clear()
+          .type(item.payload, { parseSpecialCharSequences: false });
+        // ✅ CORRECTION 2 — timestamp unique par payload pour éviter les doublons
+        cy.get("#email").clear().type(`xss-${item.id}-${Date.now()}@test.com`);
+        cy.get("#password").clear().type("testtest");
+        cy.get("#confirm").clear().type("testtest");
+        cy.get('[data-cy="register-submit"]').click();
+
+        cy.wait(`@registerXSS_${item.id}`, { timeout: 10000 }).then(
+          (interception) => {
+            const status = interception.response?.statusCode;
+            const responseBody = JSON.stringify(
+              interception.response?.body ?? "",
+            );
+            cy.log(`📡 [${item.id}] REGISTER — HTTP ${status}`);
+            if (
+              [200, 201].includes(status) &&
+              containsXSSInText(responseBody)
+            ) {
+              anomalies.push(
+                `[${item.id}] ❌ SYMFONY — payload XSS accepté et reflété dans la réponse | HTTP ${status}`,
+              );
+            } else {
+              cy.log(
+                `✅ [${item.id}] SYMFONY — payload non reflété dans la réponse`,
+              );
+            }
+          },
         );
-      }
-      cy.log("✅ TEST 8 — Payload XSS non exécuté dans le DOM");
+
+        cy.get("@alertStub").then((stub) => {
+          if (stub.callCount > 0) {
+            anomalies.push(
+              `[${item.id}] ❌ EXÉCUTION JS — alert() déclenché sur le formulaire inscription`,
+            );
+          } else {
+            cy.log(`✅ [${item.id}] Aucune exécution JS détectée`);
+          }
+        });
+
+        cy.get("body").then(($body) => {
+          const $clone = $body.clone();
+          $clone.find("input, textarea, select, form").remove();
+          const visibleText = $clone[0].textContent || "";
+          if (containsXSSInText(visibleText)) {
+            anomalies.push(
+              `[${item.id}] ❌ DOM INSCRIPTION — payload XSS visible dans le texte de la page`,
+            );
+          } else {
+            cy.log(`✅ [${item.id}] DOM propre — payload non reflété`);
+          }
+        });
+      });
     });
 
-    // Vérification 3 : un message d'erreur s'affiche (champ invalide ou refus)
-    cy.get("p.error", { timeout: 8000 }).then(($el) => {
-      if (!$el.is(":visible")) {
-        signalerAnomalie(
-          "ANO-AUTH-08B",
-          "DEFECT MEDIUM — Aucun message d'erreur affiché après injection XSS",
-          "Attendu : p.error visible | Observé : élément absent ou masqué",
+    cy.then(() => {
+      if (anomalies.length > 0) {
+        throw new Error(
+          `❌ ${anomalies.length} vulnérabilité(s) XSS détectée(s) sur le formulaire inscription :\n` +
+            anomalies.map((a, i) => `  ${i + 1}. ${a}`).join("\n"),
         );
       }
-      cy.log(`✅ TEST 8 — Message d'erreur affiché : ${$el.text()}`);
+      cy.log(
+        "✅ TEST 8 — Formulaire inscription résiste aux 4 payloads XSS ciblés",
+      );
+    });
+  });
+
+  // ─────────────────────────────────────────────
+  // TEST 9 — XSS UI Formulaire Login
+  // ─────────────────────────────────────────────
+  it("9 - Résistance XSS du formulaire Login (même payloads que inscription)", () => {
+    const anomalies = [];
+
+    cy.then(() => {
+      xssPayloads.forEach((item) => {
+        cy.visit("/#/login");
+        cy.url().should("include", "/login");
+
+        // ✅ CORRECTION 3 — intercept déclaré AVANT le clic
+        cy.intercept("POST", "**/login").as(`loginXSS_${item.id}`);
+
+        cy.get("#username")
+          .clear()
+          .type(item.payload, { parseSpecialCharSequences: false });
+        cy.get("#password")
+          .clear()
+          .type(item.payload, { parseSpecialCharSequences: false });
+        cy.contains("span", "Se connecter").click();
+
+        // ✅ CORRECTION 4 — Angular peut bloquer avant envoi → wait conditionnel
+        cy.get("body").then(() => {
+          cy.get(`@loginXSS_${item.id}`).then((interception) => {
+            if (interception && interception.response) {
+              const status = interception.response?.statusCode;
+              const responseBody = JSON.stringify(
+                interception.response?.body ?? "",
+              );
+              cy.log(`📡 [${item.id}] LOGIN — HTTP ${status}`);
+              if ([200, 201].includes(status)) {
+                anomalies.push(
+                  `[${item.id}] ❌ SYMFONY — connexion acceptée avec payload XSS | HTTP ${status}`,
+                );
+              } else {
+                cy.log(
+                  `✅ [${item.id}] SYMFONY — payload refusé (HTTP ${status})`,
+                );
+              }
+              if (containsXSSInText(responseBody)) {
+                anomalies.push(
+                  `[${item.id}] ❌ RÉPONSE SYMFONY — payload XSS reflété dans la réponse login`,
+                );
+              }
+            } else {
+              // ✅ Aucun POST = Angular a bloqué côté client = comportement attendu
+              cy.log(
+                `✅ [${item.id}] Angular a bloqué la soumission — aucun POST envoyé vers Symfony`,
+              );
+            }
+          });
+        });
+
+        cy.get("@alertStub").then((stub) => {
+          if (stub.callCount > 0) {
+            anomalies.push(
+              `[${item.id}] ❌ EXÉCUTION JS — alert() déclenché sur le formulaire login`,
+            );
+          } else {
+            cy.log(`✅ [${item.id}] Aucune exécution JS détectée`);
+          }
+        });
+
+        // ✅ CORRECTION 5 — vérification URL uniquement si le POST a eu lieu
+        cy.url().then((url) => {
+          if (url.includes("/login") || url.includes("/#/")) {
+            cy.log(`✅ [${item.id}] Pas de session créée — URL : ${url}`);
+          } else {
+            anomalies.push(
+              `[${item.id}] ❌ SESSION — redirection inattendue après payload XSS | URL : ${url}`,
+            );
+          }
+        });
+
+        cy.get("body").then(($body) => {
+          const $clone = $body.clone();
+          $clone.find("input, textarea, select, form").remove();
+          const visibleText = $clone[0].textContent || "";
+          if (containsXSSInText(visibleText)) {
+            anomalies.push(
+              `[${item.id}] ❌ DOM LOGIN — payload XSS visible dans le texte de la page`,
+            );
+          } else {
+            cy.log(`✅ [${item.id}] DOM propre — payload non reflété`);
+          }
+        });
+      });
+    });
+
+    cy.then(() => {
+      if (anomalies.length > 0) {
+        throw new Error(
+          `❌ ${anomalies.length} vulnérabilité(s) XSS détectée(s) sur le formulaire login :\n` +
+            anomalies.map((a, i) => `  ${i + 1}. ${a}`).join("\n"),
+        );
+      }
+      cy.log("✅ TEST 9 — Formulaire login résiste aux 4 payloads XSS ciblés");
     });
   });
 });

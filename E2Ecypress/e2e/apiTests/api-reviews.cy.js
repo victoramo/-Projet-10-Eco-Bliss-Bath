@@ -1,5 +1,5 @@
 import { login } from "../../services/apiAuth";
-import { addReview } from "../../services/apiReviews";
+import { addReview } from "../../services/apireviews";
 
 describe("API - Tests sur les avis (Reviews)", () => {
   let authToken;
@@ -64,7 +64,7 @@ describe("API - Tests sur les avis (Reviews)", () => {
     ).then((response) => {
       expect(response.status).to.eq(400);
       expect(response.body).to.have.property("error");
-    
+
       // ── Anomalie mineure : message d'erreur vide ──────────────────
       cy.log(`⚠️ error vide : ${JSON.stringify(response.body.error)}`);
       cy.log("✅ Contenu haineux + note 0 correctement rejeté par le backend");
